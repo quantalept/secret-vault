@@ -1,13 +1,16 @@
 <template>
 <v-container class="fluid fill-height align-center justify-center">
-  
+  <!-- <v-dialog v-model="loginDialog" pesistent width="600">  -->
     <v-card class="mx-auto px-6 py-9"  width="600" rounded elevation="15">
       <v-toolbar color="blue">
-        <v-icon> mdi-account</v-icon>
-        <v-toolbar-title >Sign Up</v-toolbar-title>
+        <v-icon> mdi-content-save</v-icon>
+        <v-toolbar-title rounded>App Initialization</v-toolbar-title>
+        <v-btn icon>
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
       </v-toolbar>
       <br>
-      <v-label dark color="blue">Hi, Please initialize your vault</v-label>
+      <v-label dark color="blue">Hi, Please initialize your local vault</v-label>
       <br><br>
       <v-form v-model="form" @submit.prevent="onSubmit">
         <v-layout align-center>
@@ -25,14 +28,14 @@
         </v-layout>
         <v-layout>
           <v-flex row>
-              <v-list-subheader color="black">Master Password: </v-list-subheader>              
+              <v-list-subheader color="black">Confirm Password: </v-list-subheader>              
             </v-flex>
         <v-text-field
           v-model="password2"
           :readonly="loading"
           :rules="[required]"
           clearable
-          label="Master Password"
+          label="Confirm Password"
         ></v-text-field>
         </v-layout>
          <br>
@@ -47,10 +50,10 @@
         >
       </v-form>
     </v-card>
-  
+  <!-- </v-dialog> -->
 </v-container>
 </template>
-<script>
+<script scoped>
 export default {
   data() {
     return {
