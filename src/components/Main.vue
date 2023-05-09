@@ -1,138 +1,138 @@
 <template>
-  <v-card height="100%">
-    <v-row>
-      <!-- column - 1 ------->
-      <v-col md="2">
-        <!-- <v-card class="mx-auto" > -->
-        <v-list density="compact">
-          <v-list-subheader class="d-flex justify-center dark"
-            >ALL VAULTS</v-list-subheader
-          >
+ 
+  <v-row class="rowdesign">
+    <!-- column - 1 ----------------------------------------------------------------------------------------------->
+    <v-col md="3" class="pa-0">
+      <v-card height="99vh" class="column1" >
+      <v-list>
+        <v-list-subheader class="justify-center">ALL VAULTS</v-list-subheader>
 
-          <v-list-item
-            v-for="(item, i) in items"
-            :key="i"
-            :value="item"
-            active-color="primary"
-          >
-            <template v-slot:prepend>
-              <v-icon :icon="item.icon"></v-icon>
-            </template>
-            <v-list-item-title v-text="item.text"></v-list-item-title>
-          </v-list-item>
+        <v-list-item
+          v-for="(item, i) in items"
+          :key="i"
+          :value="item"          
+          active-color="rgb(0,0,0)"
+        >
+          <template v-slot:prepend>
+            <v-icon :icon="item.icon"></v-icon>
+          </template>
+          <v-list-item-title v-text="item.text"></v-list-item-title>
+        </v-list-item>
 
-          <br />
+        <br />
 
-          <v-list-subheader class="d-flex justify-center"
-            >Categories
-            <!-- <v-btn density="compact" icon="mdi-plus"></v-btn> -->
-          </v-list-subheader>
+        <v-list-subheader class="justify-center">Categories </v-list-subheader>
 
-          <v-list-item
-            v-for="(item2, j) in Categories"
-            :key="j"
-            :value="item2"
-            :color="isSelected(item2.Categories) ? 'primary' : ''"
-            @click="clickedCategory(item2.Categories)"
-          >
-            <v-list-item-content>
-              <v-list-item-title v-text="item2.title"></v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <!-- </v-card> -->
-      </v-col>
+        <v-list-item
+          v-for="(item2, j) in Categories"
+          :key="j"
+          :value="item2"
+          :color="isSelected(item2.Categories) ? 'rgb(0,0,0)' : ''"
+          @click="clickedCategory(item2.Categories)"
+        >
+          <v-list-item-content>
+            <v-list-item-title v-text="item2.title"></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      </v-card>
+    </v-col>
 
-      <!-- column - 2 ------>
-      <v-col md="4">
-        <!-- <v-card > -->
-        <v-text-field
-          class="textSize"
-          label="Search items"
-          append-icon="manage_search"
-          outlined
-        ></v-text-field>
-        <!---------------------------------------------->
+    <!-- column - 2 ---------------------------------------------------------------------------------------------->
+    <v-col md="4" class="pa-0" >
+      <v-card class="column2" height="99vh" >
+      <v-text-field
+        class="textSize"
+        label="Search items"
+        append-icon="manage_search"
+        outlined
+      ></v-text-field>
+     
 
-        <v-list-item-group v-if="selectedCategory !== ''">
-          <v-list-item
-            active-color="red"
-            class="bordercolor"
-            v-for="(item3, index) in itemss"
-            link
-            :key="index"
-            @click="groupOpened = true"
-          >
+      <v-list-item-group v-if="selectedCategory !== ''" fluid>
+        <v-list-item
+          class="bordercolor"
+          v-for="(item3, index) in itemss"
+          link
+          :key="index"
+          @click="groupOpened = true"
+          :color="isSelected(item3.itemss) ? 'rgb(0,0,0)' : ''"
+          :background-color="isSelected(item3.itemss) ? 'rgb(199,21,133)' : ''"
+        >
+          <!-- <v-list-item-icon>
+              <v-icon :icon="item3.icon"></v-icon>
+            </v-list-item-icon> -->
+          <v-list-item-title class="d-flex justify light-blue">
             <v-list-item-icon>
               <v-icon :icon="item3.icon"></v-icon>
             </v-list-item-icon>
-            <v-list-item-title class="d-flex justify">
-              {{ item3.titlee }}
-            </v-list-item-title>
-            <v-list-item-title class="d-flex justify" density="compact">
-              {{ item3.Desc }}
-            </v-list-item-title>
-          </v-list-item>
-        </v-list-item-group>
+            {{ item3.titlee }}
+          </v-list-item-title>
+          <v-list-item-title class="d-flex justify" density="compact">
+            {{ item3.Desc }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list-item-group>
 
-        <!---------------------------------------------->
-        <!-- </v-card> -->
-      </v-col>
+     
+      </v-card>
+    </v-col>
 
-      <!-- column - 3 ------>
-      <v-col md="5">
-        <!-- <v-card > -->
-        <v-form v-if="groupOpened">
-          <v-layout align-center>
-            <v-flex row>
-              <v-list-subheader class="cred">Title: </v-list-subheader>
-            </v-flex>
-            <div class="first">
-              <v-text-field v-model="Title" >
-                
-              </v-text-field>
-            </div>
-          </v-layout>
+    <!-- column - 3 ---------------------------------------------------------------------------------------------->
+    <v-col md="5" class="pa-0" >
+      <v-card height="99vh" class="column3" >
+
+      <v-form class="px-3" v-if="groupOpened">
+        <v-card-text >
+          <v-row>
+            <v-label class="labeltext mt-n6">Title:</v-label>
+            <v-col cols="12" sm="6">
+              <v-text-field class="textfield1"  />
+            </v-col>
+            <v-spacer></v-spacer>
+            
+            <v-btn class="mt-5 md-5" icon="mdi-plus" ></v-btn>
+           
+          </v-row>
           <v-divider />
-          <br />
-
-          <v-layout align-center>
-            <v-flex row>
-              <v-list-subheader class="cred">User Name:</v-list-subheader>
-            </v-flex>
-            <v-text-field              
-              v-model="selectedRule.UserName"                                      
-            ></v-text-field>
-            <v-spacer />
-            <v-btn icon @click="adduser()">
-              <v-icon icon="mdi-plus-circle"> </v-icon>
-            </v-btn>
-          </v-layout>
-
-          <v-layout align-center>
-            <v-flex row>
-              <v-list-subheader class="cred">Password:</v-list-subheader>
-            </v-flex>
-            <div class="first">
+          <v-row>
+            <v-label class="labeltext">User Name:</v-label>
+            <v-col cols="12" sm="6">
               <v-text-field
-                
-                v-model="selectedRule.password"                               
+                class="textfield2"
+                v-model="UserName"                               
+                required                
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-label class="labeltext mt-n9">Password:</v-label>
+            <v-col cols="12" sm="6">
+              <v-text-field                
+                class="textfield3"
+                v-model="password"                
+                required
                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="show1 ? 'text' : 'password'"
-                @click:append="show1 = !show1"
-              >
-              </v-text-field>
-            </div>
-            <v-spacer />
-            <v-btn icon>
-              <v-icon color="primary">mdi-heart</v-icon>
+                @click:append="show1 = !show1"               
+              />
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-btn icon="mdi-heart" :style="{ color: 'rgb(192,192,192)' }">
             </v-btn>
-          </v-layout>
-         
-        </v-form>
-      </v-col>
-    </v-row>
-  </v-card>
+          </v-row>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="hide()"> Cancel </v-btn>
+          <v-btn text @click="save()" color="rgb(0, 102, 153)"> Save </v-btn>
+        </v-card-actions>
+      </v-form>
+      </v-card>
+    </v-col>
+  </v-row>
+ 
 </template>
 
 <script>
@@ -144,12 +144,11 @@ export default {
       groupOpened: false,
       show1: false,
       selectedRule: {
-        UserName:"",
-        password:"", 
-      }, 
-      Title:"",
-          
-      
+        UserName: "",
+        password: "",
+      },
+      Title: "",
+
       items: [
         { text: "All Items", icon: "mdi-star" },
         { text: "Favorites", icon: "mdi-star" },
@@ -162,7 +161,11 @@ export default {
         { title: "Tokens" },
       ],
       itemss: [
-        { titlee: "Netflix", Desc: "website:https://netflix.com" },
+        {
+          titlee: "Netflix",
+          Desc: "website:https://netflix.com",
+          icon: "mdi-star",
+        },
         { titlee: "Server DB", Desc: "Credential" },
         { titlee: "Google", Desc: "website:https://gmail.com" },
         { titlee: "API Token", Desc: "token" },
@@ -181,9 +184,18 @@ export default {
       this.selectedItem3 = this.selectedItem3 === item33 ? "" : item33;
     },
     adduser() {
-      console.log("adduser",this.selectedRule.UserName,this.selectedRule.password);
+      console.log(
+        "adduser",
+        this.selectedRule.UserName,
+        this.selectedRule.password
+      );
     },
-    
+    hide(){
+      console.log("you clicked the hide function")
+    },
+     save(){
+      console.log("you clicked the save function")
+    }
   },
 };
 </script>
@@ -191,21 +203,71 @@ export default {
 .v-list-subheader {
   color: black;
   font-size: 18px;
-  background: rgb(159, 221, 216);
+  background: rgb(176,196,222);
   font-weight: bold;
-}
-/* .v-card{
- height: 100%;
-} */
-.cred {
-  color: black;
-  font-size: 12px;
-  background: rgb(255, 255, 255);
-}
-.first {
-  width: 500px !important;
 }
 .textsize {
   max-width: 100px;
+}
+.v-sheet {
+  width: 450px;
+}
+.column1 {  
+  margin: mx-auto;
+  padding: 0px;  
+  border-left: 2px solid rgb(112,128,144);
+  background-color: darkgrey;
+}
+.column2 { 
+  margin: mx-auto;
+  padding: 0px;
+  margin-left: 0px;  
+  border-left: 2px solid rgb(112,128,144);
+  background-color: rgb(192, 192, 192);
+}
+.column3 {
+  margin: mx-auto;  
+  padding: 0px;
+  border-left: 2px solid rgb(112,128,144);
+  border-right: 2px solid rgb(112,128,144);
+  background-color: rgb(224, 224, 224);
+}
+.v-list {
+  background-color: darkgrey;
+  border: 2px;
+}
+.rowdesign {
+  padding: 1px;
+  border: 2px solid rgb(112,128,144);
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+.labeltext{  
+  font-weight: bold;
+  color: rgb(0, 0, 0); 
+}
+.textfield1{
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-left: 53px;
+  margin-right: -37px;
+  font-weight: bold;
+  color: black;
+}
+.textfield2{
+  margin-top: 18px;  
+  margin-left: 1px;
+  margin-right: 13px;
+  font-weight: bold;
+  color: black;
+}
+.textfield3{
+  margin-top: -10px;
+  margin-left: 10px;
+  margin-right: -37px;
+  font-weight: bold;
+  color: black;
 }
 </style>
