@@ -1,9 +1,9 @@
 <template>
- 
-  <v-row class="rowdesign">
+ <v-container >
+  <v-row >
     <!-- column - 1 ----------------------------------------------------------------------------------------------->
-    <v-col md="3" class="pa-0">
-      <v-card height="99vh" class="column1" >
+    <v-col md="2" class="pa-0">
+      <v-card height="100vh" class="column1" >
       <v-list>
         <v-list-subheader class="justify-center">ALL VAULTS</v-list-subheader>
 
@@ -40,7 +40,7 @@
 
     <!-- column - 2 ---------------------------------------------------------------------------------------------->
     <v-col md="4" class="pa-0" >
-      <v-card class="column2" height="99vh" >
+      <v-card class="column2" height="100vh" >
       <v-text-field
         class="textSize"
         label="Search items"
@@ -79,8 +79,8 @@
     </v-col>
 
     <!-- column - 3 ---------------------------------------------------------------------------------------------->
-    <v-col md="5" class="pa-0" >
-      <v-card height="99vh" class="column3" >
+    <v-col md="6" class="pa-0" >
+      <v-card height="100vh" class="column3" >
 
       <v-form class="px-3" v-if="groupOpened">
         <v-card-text >
@@ -132,7 +132,7 @@
       </v-card>
     </v-col>
   </v-row>
- 
+ </v-container>
 </template>
 
 <script>
@@ -213,37 +213,26 @@ export default {
   width: 450px;
 }
 .column1 {  
-  margin: mx-auto;
-  padding: 0px;  
-  border-left: 2px solid rgb(112,128,144);
+  border-left: 2px solid #848884;
   background-color: darkgrey;
 }
 .column2 { 
-  margin: mx-auto;
-  padding: 0px;
   margin-left: 0px;  
-  border-left: 2px solid rgb(112,128,144);
+  border-left: 2px solid #848884;
   background-color: rgb(192, 192, 192);
 }
 .column3 {
-  margin: mx-auto;  
-  padding: 0px;
-  border-left: 2px solid rgb(112,128,144);
-  border-right: 2px solid rgb(112,128,144);
+   
+  
+  border-left: 2px solid#848884;
+  border-right: 2px solid #848884;
   background-color: rgb(224, 224, 224);
 }
 .v-list {
   background-color: darkgrey;
   border: 2px;
 }
-.rowdesign {
-  padding: 1px;
-  border: 2px solid rgb(112,128,144);
-  margin-left: 1px;
-  margin-right: 1px;
-  margin-top: 1px;
-  margin-bottom: 1px;
-}
+
 .labeltext{  
   font-weight: bold;
   color: rgb(0, 0, 0); 
@@ -269,5 +258,12 @@ export default {
   margin-right: -37px;
   font-weight: bold;
   color: black;
+}
+.v-container {
+
+  max-width: 100%;
+
+
+  padding: 13px;
 }
 </style>
