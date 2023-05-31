@@ -20,7 +20,7 @@ export default defineComponent({
 <template>
   <v-app>
     
-  <Main > </Main>
-  
+  <!-- <Main > </Main> -->
+  <Main />
   </v-app>
 </template>

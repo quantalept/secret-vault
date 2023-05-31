@@ -52,29 +52,19 @@
               outlined
               v-model="searchQuery"
             >
-            </v-text-field>
-            <v-btn
-              color="grey"
-              class="btn-size-small"
-              append-icon="mdi-magnify"
-              @click="search"
-            ></v-btn>
+            </v-text-field>           
           </v-row>
          
-          <!-- search section starts ************************************** -->
-         
+          <!-- search section starts ************************************** -->         
+
           <div v-if="searchResults.length > 0">
             <v-list>
-              <v-list-item v-for="result in searchResults" :key="result">
-                <v-list-item-title>{{ result.title }}</v-list-item-title>
+              <v-list-item v-for="item in search" :key="item">
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item>
             </v-list>
           </div>
-          <div v-else>
-            <v-list-item-title>No search Result found</v-list-item-title>
-          </div>
-
-          
+                  
 
           <!-- search section ends ************************************** -->
 
@@ -90,15 +80,24 @@
                 isSelected(item3.itemss) ? 'rgb(199,21,133)' : ''
               "
             >
-              <v-list-item-title class="d-flex justify light-blue">
+            <v-row class="d-flex justify-center">
+                <v-list-item-title >
+                  <v-col md="2" >
                 <v-list-item-icon>
-                  <v-icon :icon="item3.icon"></v-icon>
+                <v-icon :icon="item3.icon"></v-icon>
                 </v-list-item-icon>
-                {{ item3.titlee }}
-              </v-list-item-title>
-              <v-list-item-title class="d-flex justify" density="compact">
-                {{ item3.Desc }}
-              </v-list-item-title>
+                  </v-col>
+                </v-list-item-title>
+
+                <v-col md="6">
+                  <v-list-item-title>                    
+                      {{ item3.titlee }}  
+                  </v-list-item-title>
+                  <v-list-item-title >                
+                      {{ item3.Desc }}                    
+                  </v-list-item-title>
+                </v-col>
+            </v-row>
             </v-list-item>
           </v-list-item-group>
         </v-card>
@@ -147,7 +146,7 @@
                     />
                   </v-col>
                   <v-spacer></v-spacer>
-                  <!-- :style="{ color: 'rgb(192,192,192)' }" -->
+                 
                   <v-btn
                     icon
                     @click="AddtoFavorite(user)"
@@ -181,10 +180,7 @@ export default {
   data() {
     return {
       
-      
-      
-      selectedCategory: "",
-      selectedItem3: "",
+      selectedCategory: "",      
       groupOpened: false,
       show1: false,
       isFavorite: false,
@@ -214,15 +210,15 @@ export default {
         {
           titlee: "Netflix",
           Desc: "website:https://netflix.com",
-          icon: "mdi-star",
+          icon: "mdi-alpha-a",
         },
-        { titlee: "Server DB", Desc: "Credential", icon: "mdi-star" },
+        { titlee: "Server DB", Desc: "Credential", icon: "mdi-alpha-s" },
         {
           titlee: "Google",
           Desc: "website:https://gmail.com",
-          icon: "mdi-star",
+          icon: "mdi-alpha-g",
         },
-        { titlee: "API Token", Desc: "token", icon: "mdi-star" },
+        { titlee: "API Token", Desc: "token", icon: "mdi-alpha-a" },
       ],
     };
   },
@@ -271,26 +267,20 @@ export default {
     },
     hide() {
       console.log("you clicked the hide function");
+      this.groupOpened = false;
     },
-    AddtoFavorite(user) {
-      // this.isFavorite = true;
-      // if (!this.FavoriteList.includes(user)) {
-      //   this.FavoriteList.push(user);
-      // }
-      // console.log(this.FavoriteList);
+    AddtoFavorite(user) {      
       this.isFavorite = !this.isFavorite;
     },
-
-    search() {
-      const query = this.searchQuery.toLowerCase();
-      this.searchResults = this.Categories.filter((item) =>
-        item.title.toLowerCase().includes(query)
-      );
-    },
-
     
   },
-  
+  computed: {
+  search() {
+      return this.Categories.filter(item =>
+        item.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    },
+  }
 };
 </script>
 <style scoped>
