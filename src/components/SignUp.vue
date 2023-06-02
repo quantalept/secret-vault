@@ -69,7 +69,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .textalign1 {
   margin-left: 10px;
 }
