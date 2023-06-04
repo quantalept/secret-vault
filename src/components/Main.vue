@@ -1,9 +1,9 @@
 <template>
-  <v-container>
-    <v-row>
+  <v-container class="main-container">
+      <v-row style="height:100%">
       <!-- column - 1 ----------------------------------------------------------------------------------------------->
       <v-col md="2" class="pa-0">
-        <v-card height="100vh" class="column1">
+        <v-card style="height: 100%" class="column1">
           <v-list>
             <v-list-subheader class="justify-center"
               >ALL VAULTS</v-list-subheader
@@ -46,7 +46,7 @@
 
       <!-- column - 2 ---------------------------------------------------------------------------------------------->
       <v-col md="4" class="pa-0">
-        <v-card class="column2" height="100vh">
+        <v-card class="column2" height="100%">
           <v-row class="pa-5">
             <v-text-field              
               placeholder="Search Items..."
@@ -109,7 +109,7 @@
 
       <!-- column - 3 ---------------------------------------------------------------------------------------------->
       <v-col md="6" class="pa-0">
-        <v-card height="100vh" class="column3">
+        <v-card height="100%" class="column3">
           <v-form class="px-3" v-if="groupOpened">
             <v-card-text>
               <v-row>
@@ -285,6 +285,12 @@ export default {
 };
 </script>
 <style scoped>
+.v-main .main-container{
+  margin-top: 0px;
+  height: calc(100vh - 35px);
+  padding: 0px;
+}
+
 .v-list-subheader {
   color: black;
   font-size: 18px;
