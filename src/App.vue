@@ -21,9 +21,13 @@ export default defineComponent({
 });
 </script>
 <template>
-  <v-app> 
-  <Main/>
-  <Menubar />
+  <v-app app>
+    <Menubar />
+    <v-main>
+      <Main />
+    </v-main>
+    
+  
   <!-- <Main/> -->
   </v-app>
 </template>
