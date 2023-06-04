@@ -1,20 +1,18 @@
 <template>
-    <v-app-bar app dark height="35" color="#E5E4E2" elevation="0">
-      <v-row no-gutters>
-        <v-col cols="auto">
-          <v-toolbar-title> <v-icon>mdi-shield-half-full</v-icon> Secret Manager</v-toolbar-title>
-        </v-col>
-        <v-col>
-          <v-row no-gutters class="ml-16">
-            
-            <v-btn color="black">Vault</v-btn>
-            <v-btn color="black">Edit</v-btn>
-            <v-btn color="black">View</v-btn>
-            <v-btn color="black">Help</v-btn>
-            
-          </v-row>
-        </v-col>
-      </v-row>
+    <v-app-bar app dark height="35" color="#E5E4E2" bottom>
+      <v-menu offset-y>
+            <template v-slot:activator="{ props }">
+                <v-btn text v-bind="props" v-on="on">Vault</v-btn>
+            </template>
+            <v-list>
+              <v-list-item>
+                <v-list-item-title>Preferences</v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title>Exit</v-list-item-title>
+              </v-list-item>
+          </v-list>
+        </v-menu>
     </v-app-bar>
   </template>
   
