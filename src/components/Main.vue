@@ -3,40 +3,37 @@
       <v-row style="height:100%">
       <!-- column - 1 ----------------------------------------------------------------------------------------------->
       <v-col md="2" class="pa-0">
-        <v-card style="height: 100%" class="column1">
+        <v-card style="height: 100%" class="AllVaults-section">
           <v-list>
             <v-list-subheader class="justify-center"
               >ALL VAULTS</v-list-subheader
             >
 
             <v-list-item
-              v-for="(item, i) in items"
+              v-for="(vault, i) in AllVaults"
               :key="i"
-              :value="item"
+              :value="vault"
               active-color="rgb(0,0,0)"
             >
               <template v-slot:prepend>
-                <v-icon :icon="item.icon"></v-icon>
+                <v-icon :icon="vault.icon"></v-icon>
               </template>
-              <v-list-item-title >{{ item.text }}</v-list-item-title>
+              <v-list-item-title >{{ vault.text }}</v-list-item-title>
             </v-list-item>
 
             <br />
 
-            <v-list-subheader class="justify-center"
-              >Categories
-            </v-list-subheader>
-              
+            <v-list-subheader class="justify-center">Categories</v-list-subheader>              
               <v-list-item
                 class="pl-16"                
-                v-for="(item2, j) in Categories"
+                v-for="(category, j) in Categories"
                 :key="j"
-                :value="item2"
-                :color="isSelected(item2.Categories) ? 'rgb(0,0,0)' : ''"
-                @click="clickedCategory(item2)"
+                :value="category"
+                :color="isSelected(category.title) ? 'rgb(0,0,0)' : ''"
+                @click="clickedCategory(category.title)"
               >
                 <v-list-item-content >
-                  <v-list-item-title >{{ item2.title }}</v-list-item-title>
+                  <v-list-item-title >{{ category.title }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               
@@ -46,22 +43,22 @@
 
       <!-- column - 2 ---------------------------------------------------------------------------------------------->
       <v-col md="4" class="pa-0">
-        <v-card class="column2" height="100%">
+        <v-card class="Categories-section" height="100%">
           <v-row class="pa-5">
             <v-text-field              
               placeholder="Search Items..."
               v-model="searchQuery"
-              bg-color="white"              
+              bg-color="white" 
+                          
             >
             </v-text-field>
           </v-row>
-
           <!-- search section starts ************************************** -->
 
           <div v-if="searchResults.length > 0">
             <v-list>
-              <v-list-item v-for="item in search" :key="item">
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item v-for="search_item in search" :key="search_item">
+                <v-list-item-title>{{ search_item.title }}</v-list-item-title>
               </v-list-item>
             </v-list>
           </div>
@@ -69,21 +66,22 @@
           <!-- search section ends ************************************** -->
 
           <v-list-item-group v-if="selectedCategory !== ''" >
-            <v-list-item
-              class="bordercolor"
-              v-for="(item3, index) in itemss"
+            <v-list-item 
+              class="backcolor"             
+              v-for="(CategoryDesc, index) in Category_Description"
               link
               :key="index"
-              @click="groupOpened = true"
-              :color="isSelected(item3.itemss) ? 'blue' : ''"
+              @click="groupOpened='true'"
+              :color="textColor('green')"
+              
               elevation="2"
             >
-              <v-row class="rowbordercolor" >
+              <v-row class="Categories-Description" >
                 <v-list-item-title>
                   <v-col md="2">
                     <v-list-item-icon class="material-icons">
                       
-                      <v-icon  :icon="item3.icon"></v-icon>
+                      <v-icon  :icon="CategoryDesc.icon"></v-icon>
                       
                     </v-list-item-icon>
                   </v-col>
@@ -91,10 +89,10 @@
 
                 <v-col md="6" >
                   <v-list-item-title>
-                    {{ item3.titlee }}
+                    {{ CategoryDesc.title }}
                   </v-list-item-title>
                   <v-list-item-title>
-                    {{ item3.Desc }}
+                    {{ CategoryDesc.Desc }}
                   </v-list-item-title>
                 </v-col>
               </v-row>
@@ -109,29 +107,29 @@
 
       <!-- column - 3 ---------------------------------------------------------------------------------------------->
       <v-col md="6" class="pa-0">
-        <v-card height="100%" class="column3">
+        <v-card height="100%" class="Credential-section">
           <v-form class="px-3" v-if="groupOpened">
             <v-card-text>
               <v-row>
-                <v-label class="labeltext mt-n6">Title:</v-label>
+                <v-label class="Label-setting mt-n6">Title:</v-label>
                 <v-col cols="12" sm="6">
-                  <v-text-field class="textfield1" bg-color="white" />
+                  <v-text-field class="Title-field" bg-color="white" />
                 </v-col>
                 <v-spacer></v-spacer>
 
-                <v-btn
-                  class="mt-5 md-5"
-                  icon="mdi-plus"
-                  @click="adduser()"
-                ></v-btn>
+                <v-btn class="mt-5 md-5" icon="mdi-plus" @click="adduser()" ></v-btn>
+                <v-btn class="mt-5 md-5 ml-2" icon @click="AddtoFavorite(user)"
+                  :color="isFavorite ? 'red' : 'rgb(192,192,192)'">
+                  <v-icon color="rgb(240,255,255)">mdi-heart</v-icon>
+                </v-btn>
               </v-row>
               <v-divider />
               <div v-for="(user, index) in users" :key="index">
                 <v-row>
-                  <v-label class="labeltext">User Name:</v-label>
+                  <v-label class="Label-setting">User Name:</v-label>
                   <v-col cols="12" sm="6">
                     <v-text-field
-                      class="textfield2"
+                      class="User-field"
                       v-model="UserName"
                       type="text"
                       bg-color="white"
@@ -140,11 +138,11 @@
                 </v-row>
 
                 <v-row>
-                  <v-label class="labeltext mt-n9">Password:</v-label>
+                  <v-label class="Label-setting mt-n9">Password:</v-label>
                   <v-col cols="12" sm="6">
                     <v-text-field
                       bg-color="white"
-                      class="textfield3"
+                      class="Password-field"
                       v-model="password"
                       :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                       :type="show1 ? 'text' : 'password'"
@@ -153,13 +151,7 @@
                   </v-col>
                   <v-spacer></v-spacer>
 
-                  <v-btn
-                    icon
-                    @click="AddtoFavorite(user)"
-                    :color="isFavorite ? 'red' : 'rgb(192,192,192)'"
-                  >
-                    <v-icon color="rgb(240,255,255)">mdi-heart</v-icon>
-                  </v-btn>
+                  
                 </v-row>
               </div>
             </v-card-text>
@@ -182,7 +174,7 @@
 export default {
   data() {
     return {
-      selectedCategory: "",
+      selectedCategory:"",
       groupOpened: false,
       show1: false,
       isFavorite: false,
@@ -194,8 +186,8 @@ export default {
       password: null,
       users: [{ UserName: null, password: null }],
       Title: "",
-
-      items: [
+      currentcolor: 100,
+      AllVaults: [
         { text: "All Items", icon: "mdi-format-list-bulleted-type" },
         { text: "Favorites", icon: "mdi-star" },
         { text: "Frequently Used", icon: "mdi-heart" },
@@ -208,33 +200,36 @@ export default {
         { title: "Token Key" },
         { title: "Token One" },
       ],
-      itemss: [
+      Category_Description: [
         {
-          titlee: "Netflix",
+          title: "Netflix",
           Desc: "website:https://netflix.com",
           icon: "mdi-alpha-n",
         },
-        { titlee: "Server DB", Desc: "Credential", icon: "mdi-alpha-s" },
+        { title: "Server DB", Desc: "Credential", icon: "mdi-alpha-s" },
         {
-          titlee: "Google",
+          title: "Google",
           Desc: "website:https://gmail.com",
           icon: "mdi-alpha-g",
         },
-        { titlee: "API Token", Desc: "token", icon: "mdi-alpha-a" },
+        { title: "API Token", Desc: "token", icon: "mdi-alpha-a" },
       ],
     };
   },
   methods: {
-    clickedCategory(item2) {
-      this.selectedCategory = item2;
-      console.log(this.selectedCategory);
+    clickedCategory(clicked_category) {
+      this.selectedCategory = clicked_category;
+      console.log("selected category is+++ "+this.selectedCategory);
     },
-    isSelected(item2) {
-      return this.selectedCategory === item2;
+    isSelected(clickedcategory) {
+      // console.log("clicked category is "+clickedcategory);
+      return clickedcategory === this.selectedCategory;
+      
     },
-    clickedItem3(item33) {
-      this.selectedItem3 = item33;
-    },
+    
+    textColor(fontcolor) {
+        return fontcolor == this.currentcolor ? "white" : "black";
+      },
 
     adduser() {
       if (!this.UserName && !this.password) {
@@ -297,24 +292,24 @@ export default {
   background: rgb(176, 196, 222);
   font-weight: bold;
 }
-.textsize {
+/* .textsize {
   max-width: 100px;
   border-radius: 100px;
 }
 .v-sheet {
   width: 450px;
-}
-.column1 {
+} */
+.AllVaults-section {
   border-left: 2px solid #848884;
   background-color: darkgrey;
 
 }
-.column2 {
+.Categories-section {
   margin-left: 0px;
   border-left: 2px solid #848884;
   background-color: rgb(192, 192, 192);
 }
-.column3 {
+.Credential-section {
   border-left: 2px solid#848884;
   border-right: 2px solid #848884;
   background-color: rgb(224, 224, 224);
@@ -324,11 +319,11 @@ export default {
   border: 2px;
 }
 
-.labeltext {
+.Label-setting {
   font-weight: bold;
   color: rgb(0, 0, 0);
 }
-.textfield1 {
+.Title-field {
   margin-top: 2px;
   margin-bottom: 2px;
   margin-left: 53px;
@@ -336,14 +331,14 @@ export default {
   font-weight: bold;
   color: black;
 }
-.textfield2 {
+.User-field {
   margin-top: 18px;
   margin-left: 1px;
   margin-right: 13px;
   font-weight: bold;
   color: black;
 }
-.textfield3 {
+.Password-field {
   margin-top: -10px;
   margin-left: 10px;
   margin-right: -37px;
@@ -356,15 +351,16 @@ export default {
   margin-top: 30px;
 }
 
-.rowbordercolor{
+.Categories-Description{
   border-color: rgb(214, 12, 45);   
   border-radius: 0px;
-  border-width: 5px;
+  border-width: 15px;
   height: 80px;
   margin-top: 3px;
   align-items: center;
   margin-left:10px;
   margin-right: 10px;
+  
 }
 /* .bordercolor{    
   padding: 1px;
@@ -378,7 +374,5 @@ export default {
     align-items: center;
     justify-content: center;
 }
-/* .catealign{
-  margin-left: 50px;
-} */
+
 </style>
