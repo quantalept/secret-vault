@@ -1,6 +1,6 @@
 <template>
   <v-app-bar app dark height="35" color="#E5E4E2" bottom>
-    <v-menu offset-y>
+    <!-- <v-menu offset-y> -->
           <template v-slot:activator="{ props }">
               <v-btn text v-bind="props" v-on="on">Vault</v-btn>
           </template>
@@ -12,7 +12,7 @@
               <v-list-item-title>Exit</v-list-item-title>
             </v-list-item>
         </v-list>
-      </v-menu>
+      <!-- </v-menu> -->
   </v-app-bar>
 </template>
 
