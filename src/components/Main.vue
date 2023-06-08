@@ -3,12 +3,13 @@
       <v-row style="height:100%">
       <!-- column - 1 ----------------------------------------------------------------------------------------------->
       <v-col md="2" class="pa-0">
-        <v-card style="height: 100%" class="AllVaults-section">
+        <v-card style="height: 100%" class="card__all-vaults">
           <v-list>
+            <div >
             <v-list-subheader class="justify-center"
               >ALL VAULTS</v-list-subheader
             >
-
+          </div>
             <v-list-item
               v-for="(vault, i) in AllVaults"
               :key="i"
@@ -43,7 +44,7 @@
 
       <!-- column - 2 ---------------------------------------------------------------------------------------------->
       <v-col md="4" class="pa-0">
-        <v-card class="Categories-section" height="100%">
+        <v-card class="card__categories" height="100%">
           <v-row class="pa-5">
             <v-text-field              
               placeholder="Search Items..."
@@ -67,7 +68,7 @@
 
           <v-list-item-group v-if="selectedCategory !== ''" >
             <v-list-item 
-              class="backcolor"             
+                           
               v-for="(CategoryDesc, index) in Category_Description"
               link
               :key="index"
@@ -76,10 +77,10 @@
               
               elevation="2"
             >
-              <v-row class="Categories-Description" >
+              <v-row class="card__categories_description" >
                 <v-list-item-title>
                   <v-col md="2">
-                    <v-list-item-icon class="material-icons">
+                    <v-list-item-icon >
                       
                       <v-icon  :icon="CategoryDesc.icon"></v-icon>
                       
@@ -107,18 +108,18 @@
 
       <!-- column - 3 ---------------------------------------------------------------------------------------------->
       <v-col md="6" class="pa-0">
-        <v-card height="100%" class="Credential-section">
+        <v-card height="100%" class="card__credential">
           <v-form class="px-3" v-if="groupOpened">
             <v-card-text>
               <v-row>
-                <v-label class="Label-setting mt-n6">Title:</v-label>
+                <v-label class="card__credential_label mt-n6">Title:</v-label>
                 <v-col cols="12" sm="6">
-                  <v-text-field class="Title-field" bg-color="white" />
+                  <v-text-field class="title-field" bg-color="white" />
                 </v-col>
                 <v-spacer></v-spacer>
 
-                <v-btn class="mt-5 md-5" icon="mdi-plus" @click="adduser()" ></v-btn>
-                <v-btn class="mt-5 md-5 ml-2" icon @click="AddtoFavorite(user)"
+                <v-btn class="mt-5 md-5" icon="mdi-plus" @click="addUser()" ></v-btn>
+                <v-btn class="mt-5 md-5 ml-2" icon @click="addtoFavorite(user)"
                   :color="isFavorite ? 'red' : 'rgb(192,192,192)'">
                   <v-icon color="rgb(240,255,255)">mdi-heart</v-icon>
                 </v-btn>
@@ -126,10 +127,10 @@
               <v-divider />
               <div v-for="(user, index) in users" :key="index">
                 <v-row>
-                  <v-label class="Label-setting">User Name:</v-label>
+                  <v-label class="card__credential_label">User Name:</v-label>
                   <v-col cols="12" sm="6">
                     <v-text-field
-                      class="User-field"
+                      class="user-field"
                       v-model="UserName"
                       type="text"
                       bg-color="white"
@@ -138,11 +139,11 @@
                 </v-row>
 
                 <v-row>
-                  <v-label class="Label-setting mt-n9">Password:</v-label>
+                  <v-label class="card__credential_label mt-n9">Password:</v-label>
                   <v-col cols="12" sm="6">
                     <v-text-field
                       bg-color="white"
-                      class="Password-field"
+                      class="password-field"
                       v-model="password"
                       :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                       :type="show1 ? 'text' : 'password'"
@@ -158,7 +159,7 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn text @click="hide()"> Cancel </v-btn>
+              <v-btn text @click="hideUser()"> Cancel </v-btn>
               <v-btn text @click="save()" color="rgb(0, 102, 153)">
                 Save
               </v-btn>
@@ -231,7 +232,7 @@ export default {
         return fontcolor == this.currentcolor ? "white" : "black";
       },
 
-    adduser() {
+    addUser() {
       if (!this.UserName && !this.password) {
         this.users.push({
           UserName: null,
@@ -242,7 +243,7 @@ export default {
         console.log("user name and password is not empty");
       }
     },
-    save() {
+    saveUser() {
       if (this.UserName && this.password) {
         this.NewUsers.push({
           UserName: this.UserName,
@@ -262,11 +263,11 @@ export default {
         console.log(this.NewUsers);
       } else console.log("user name and password is empty");
     },
-    hide() {
+    hideUser() {
       console.log("you clicked the hide function");
       this.groupOpened = false;
     },
-    AddtoFavorite(user) {
+    addtoFavorite(user) {
       this.isFavorite = !this.isFavorite;
     },
   },
@@ -292,24 +293,18 @@ export default {
   background: rgb(176, 196, 222);
   font-weight: bold;
 }
-/* .textsize {
-  max-width: 100px;
-  border-radius: 100px;
-}
-.v-sheet {
-  width: 450px;
-} */
-.AllVaults-section {
+
+.card__all-vaults {
   border-left: 2px solid #848884;
   background-color: darkgrey;
 
 }
-.Categories-section {
+.card__categories {
   margin-left: 0px;
   border-left: 2px solid #848884;
   background-color: rgb(192, 192, 192);
 }
-.Credential-section {
+.card__credential {
   border-left: 2px solid#848884;
   border-right: 2px solid #848884;
   background-color: rgb(224, 224, 224);
@@ -319,11 +314,11 @@ export default {
   border: 2px;
 }
 
-.Label-setting {
+.card__credential_label {
   font-weight: bold;
   color: rgb(0, 0, 0);
 }
-.Title-field {
+.title-field {
   margin-top: 2px;
   margin-bottom: 2px;
   margin-left: 53px;
@@ -331,14 +326,14 @@ export default {
   font-weight: bold;
   color: black;
 }
-.User-field {
+.user-field {
   margin-top: 18px;
   margin-left: 1px;
   margin-right: 13px;
   font-weight: bold;
   color: black;
 }
-.Password-field {
+.password-field {
   margin-top: -10px;
   margin-left: 10px;
   margin-right: -37px;
@@ -350,8 +345,7 @@ export default {
   padding: 13px;
   margin-top: 30px;
 }
-
-.Categories-Description{
+.card__categories_description{
   border-color: rgb(214, 12, 45);   
   border-radius: 0px;
   border-width: 15px;
@@ -362,17 +356,10 @@ export default {
   margin-right: 10px;
   
 }
-/* .bordercolor{    
-  padding: 1px;
-  margin-left: 7px;  
-  margin-right: 8px;
-  
-  
-} */
-.material-icons {
+/* .card__categories-description--material-icons {
     display: flex;
     align-items: center;
     justify-content: center;
-}
+} */
 
 </style>
