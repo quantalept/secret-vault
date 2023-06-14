@@ -4,6 +4,7 @@ import Login from "./components/Login.vue";
 import SignUp from "./components/SignUp.vue";
 import Main from "./components/Main.vue";
 import Menubar from "./components/Menubar.vue";
+import Table from "./components/Table.vue";
 
 
 
@@ -13,6 +14,7 @@ export default defineComponent({
     Main,
     Login,    
     Menubar,
+    Table
     
   },
   // data() {
@@ -22,10 +24,8 @@ export default defineComponent({
 </script>
 <template>
   <v-app app>
-    <Menubar />
-    <v-main>
-      <Main />
-    </v-main>
+   
+ <Table></Table>
     
   
   <!-- <Main/> -->
