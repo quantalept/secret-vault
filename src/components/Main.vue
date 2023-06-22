@@ -19,7 +19,7 @@
 
             <v-list-subheader class='justify-center'>Categories</v-list-subheader>
             <v-list-item class='pl-16' v-for="(category, j) in Categories" :key="j" :value="category"
-              :color="isSelected(category.title) ? 'rgb(15,15,125)' : ''" @click="clickedCategory(category.title)">
+              :color="isSelected(category.title) ? 'rgb(255,255,255)' : ''" @click="clickedCategory(category.title)">
               <v-list-item-content>
                 <v-list-item-title>{{ category.title }}</v-list-item-title>
               </v-list-item-content>
@@ -53,10 +53,11 @@
               
               v-for="(CategoryDesc, index) in Category_Description" :key="index"
               
-              elevation="2" 
-              
-              :color="isClicked(CategoryDesc) ? 'yellow' : ''" 
-              @click="clickedCategory(CategoryDesc), groupOpened='true'">
+              elevation="1" 
+              class="SelectedTile" 
+              active-class="SelectedTile-active"
+              :class="{'selected': isClicked(CategoryDesc)}" 
+              @click="clickedDesc(CategoryDesc), groupOpened='true'">
 
               <v-row class='card__categories_description'>
                 <v-list-item-title>
@@ -78,7 +79,7 @@
                   </v-list-item-title>
                 </v-col>
               </v-row>
-              <br />
+              <divider> </divider>
 
 
             </v-list-item>
@@ -356,8 +357,9 @@ export default {
 
 .card__categories_description {
   
-  height: 80px;
-  margin-top: 3px;
+  height: 70px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   align-items: center;
   margin-left: 10px;
   margin-right: 10px;
@@ -365,14 +367,25 @@ export default {
 }
 .SelectedTile:hover {  
    
-  color: rgb(128, 44, 11); 
-  border-color: rgb(178, 233, 165);
-  border-width: 5px;
-  background-color: rgb(131, 223, 230);
+  color: rgb(235, 231, 229); 
+  border-color: rgb(113, 117, 112);
+  border-width: 3px;
+  background-color: rgb(151, 186, 189);
   border-radius: 5px;
 }
 .SelectedTile-active {
   border-radius: 4px;
-  background: rgba(232, 235, 231, 0.815);
+  background: rgba(205, 238, 194, 0.815);
+}
+
+.selected {
+background-color: rgb(201, 205, 206);
+border-block-style: solid;
+
+border-inline-width: 5px;
+border-block: 5px solid rgb(124, 118, 118);
+border-left-color: rgb(124, 118, 118);
+border-right-color: rgb(124, 118, 118);
+
 }
 </style>
