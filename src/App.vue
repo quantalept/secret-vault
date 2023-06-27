@@ -4,7 +4,7 @@ import Login from "./components/Login.vue";
 import SignUp from "./components/SignUp.vue";
 import Main from "./components/Main.vue";
 import Menubar from "./components/Menubar.vue";
-
+import Test3 from "./components/Test3.vue";
 
 
 export default defineComponent({
@@ -13,6 +13,8 @@ export default defineComponent({
     Main,
     Login,    
     Menubar,
+    Test3,
+    
     
   },
   // data() {
@@ -22,13 +24,13 @@ export default defineComponent({
 </script>
 <template>
   <v-app app>
-    <Menubar />
+    <!-- <Menubar />
     <v-main>
       <Main />
-    </v-main>
+    </v-main> -->
     
   
-  <!-- <Main/> -->
+  <Test3/>
   </v-app>
 </template>
 <style scoped>
