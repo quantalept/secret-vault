@@ -6,13 +6,13 @@ import Main from "./components/Main.vue";
 import Menubar from "./components/Menubar.vue";
 
 
-
 export default defineComponent({
   components: {
     SignUp,    
     Main,
     Login,    
-    Menubar,
+    Menubar, 
+       
     
   },
   // data() {
@@ -22,13 +22,13 @@ export default defineComponent({
 </script>
 <template>
   <v-app app>
-    <Menubar />
+    <Menubar/>    
     <v-main>
       <Main />
     </v-main>
     
   
-  <!-- <Main/> -->
+ 
   </v-app>
 </template>
 <style scoped>
