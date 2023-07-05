@@ -5,7 +5,7 @@ import SignUp from "./components/SignUp.vue";
 import Main from "./components/Main.vue";
 import Menubar from "./components/Menubar.vue";
 import Database from "./components/Database.vue";
-
+import Encryption from "./components/Encryption.vue";
 
 
 export default defineComponent({
@@ -15,6 +15,7 @@ export default defineComponent({
     Login,    
     Menubar,
     Database,
+    Encryption
     
   },
   // data() {
@@ -25,7 +26,8 @@ export default defineComponent({
 <template>
   <v-app app>
    
- <database></database>
+
+ <encryption></encryption>
     
   
   <!-- <Main/> -->
