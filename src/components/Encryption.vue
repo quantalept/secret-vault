@@ -58,7 +58,7 @@
     // Decrypt the data
     const decryptedData = await invoke(DECRYPT_DATA, {
       encryptedData: row.encrypted,
-      masterPassword: 'your_master_password_here',
+      masterPassword: 'richi',
     });
     console.log('Decrypted Data:', decryptedData);
 
