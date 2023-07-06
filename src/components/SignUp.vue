@@ -2,7 +2,7 @@
   <v-container class="fluid fill-height align-center justify-center">
     <!-- <v-dialog v-model="loginDialog" pesistent width="600">  -->
     <v-card class="mx-auto px-6 py-9" width="600" rounded elevation="15">
-      <v-toolbar color="blue" height="35">
+      <v-toolbar color="customColor4" height="35">
         <v-icon> mdi-content-save</v-icon>
         <v-toolbar-title rounded class="d-flex justify-center"
           >App Initialization</v-toolbar-title
@@ -12,7 +12,7 @@
         </v-btn>
       </v-toolbar>
       <br />
-      <v-label dark color="blue"
+      <v-label dark 
         >Hi, Please initialize your local vault</v-label
       >
       <br /><br />
@@ -25,7 +25,7 @@
             v-model="password1"
             :readonly="loading"
             :rules="[required]"
-            class="textalign1"
+            class="passwordfield"
             clearable
             label="Master Password"
           ></v-text-field>
@@ -42,7 +42,7 @@
             :rules="[required]"
             clearable
             label="Confirm Password"
-            class="textalign2"
+            class="confpasswordfield"
           ></v-text-field>
         </v-layout>
         <br />
@@ -51,7 +51,7 @@
           absolute
           top
           :style="{ left: '50%', transform: 'translateX(-50%)' }"
-          color="primary"
+          color="customColor4"
           v-on:click="save()"
           >save</v-btn
         >
@@ -70,10 +70,10 @@ export default {
 };
 </script>
 <style scoped>
-.textalign1 {
+.passwordfield {
   margin-left: 10px;
 }
-.textalign2 {
+.confpasswordfield {
   margin-left: 3px;
 }
 </style>

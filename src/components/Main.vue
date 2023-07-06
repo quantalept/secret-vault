@@ -8,7 +8,7 @@
             <div>
               <v-list-subheader class='justify-center'>ALL VAULTS</v-list-subheader>
             </div>
-            <v-list-item v-for="(vault, i) in AllVaults" :key="i" :value="vault" active-color="rgb(0,0,0)">
+            <v-list-item v-for="(vault, i) in AllVaults" :key="i" :value="vault" active-color="black">
               <template v-slot:prepend>
                 <v-icon :icon="vault.icon"></v-icon>
               </template>
@@ -19,7 +19,7 @@
 
             <v-list-subheader class='justify-center'>Categories</v-list-subheader>
             <v-list-item class='pl-16' v-for="(category, j) in Categories" :key="j" :value="category"
-              :color="isSelected(category.title) ? 'rgb(255,255,255)' : ''" @click="clickedCategory(category.title)">
+              :color="isSelected(category.title) ? 'white' : ''" @click="clickedCategory(category.title)">
               <v-list-item-content>
                 <v-list-item-title>{{ category.title }}</v-list-item-title>
               </v-list-item-content>
@@ -108,8 +108,8 @@
                   style="cursor:pointer;"
                   title="Add to Favorite List" 
                   class='mt-5 md-5 ml-2' icon @click="addtoFavorite()"
-                  :color="isFavorite ? 'rgb(175,238,238)' : 'rgb(192,192,192)'">
-                  <v-icon color="rgb(240,255,255)">mdi-heart</v-icon>
+                  :color="isFavorite ? 'rgb(106,106,106)' : 'silver'">
+                  <v-icon color="azure">mdi-heart</v-icon>
                 </v-btn>
               </v-row>
               <v-divider />
@@ -150,7 +150,7 @@
               <v-btn text 
                   style="cursor:pointer;"
                   title="Save User" 
-                  @click="saveUser()" color="rgb(0, 102, 153)">
+                  @click="saveUser()" color="black">
                 Save
               </v-btn>
             </v-card-actions>
@@ -292,7 +292,7 @@ export default {
 .v-list-subheader {
   color: black;
   font-size: 18px;
-  background: rgb(176, 196, 222);
+  background: rgb(110, 110, 110);
   font-weight: bold;
 }
 
@@ -370,7 +370,7 @@ export default {
   color: rgb(235, 231, 229); 
   border-color: rgb(113, 117, 112);
   border-width: 3px;
-  background-color: rgb(151, 186, 189);
+  background-color: rgb(160, 160, 160);
   border-radius: 5px;
 }
 .SelectedTile-active {
@@ -379,7 +379,7 @@ export default {
 }
 
 .selected {
-background-color: rgb(201, 205, 206);
+background-color: rgb(160, 160, 160);
 border-block-style: solid;
 
 border-inline-width: 5px;

@@ -24,7 +24,7 @@ export default defineComponent({
   <v-app app>
     <Menubar/>    
     <v-main>
-      <Main />
+      <Main/>
     </v-main>
     
   

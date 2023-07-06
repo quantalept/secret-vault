@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app dark height="35" color="#E5E4E2" bottom>
+    <v-app-bar app dark height="35" color="customColor3" bottom>
       <v-toolbar-items>
         <v-menu offset-y open-on-hover>
           <template v-slot:activator="{ props }">
