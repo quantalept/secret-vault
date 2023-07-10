@@ -90,79 +90,19 @@
 
       <!-- column - 3 ---------------------------------------------------------------------------------------------->
       <v-col md="6" class='pa-0'>
-        <v-card height="100%" class='card__credential'>
-          <v-form class="px-3" v-if="groupOpened">
-            <v-card-text>
-              <v-row>
-                <v-label class='card__credential_label mt-n6'>Title:</v-label>
-                <v-col cols="12" sm="6">
-                  <v-text-field class='title-field' bg-color="white" />
-                </v-col>
-                <v-spacer></v-spacer>
-                
-                  <v-btn class='mt-5 md-5' icon="mdi-plus" style="cursor:pointer;"
-                  title="Add New Text Field"  @click="addTextField()"></v-btn>
-                  
-               
-                <v-btn 
-                  style="cursor:pointer;"
-                  title="Add to Favorite List" 
-                  class='mt-5 md-5 ml-2' icon @click="addtoFavorite()"
-                  :color="isFavorite ? 'rgb(175,238,238)' : 'rgb(192,192,192)'">
-                  <v-icon color="rgb(240,255,255)">mdi-heart</v-icon>
-                </v-btn>
-              </v-row>
-              <v-divider />
-              
-              
-                <v-row>
-                  <v-label class='card__credential_label'>User Name:</v-label>
-                  <v-col cols="12" sm="6">
-                    <v-text-field class='user-field' v-model="UserName" type="text" bg-color="white"></v-text-field>
-                  </v-col>                  
-                </v-row>
-
-                <v-row>
-                  <v-label class='card__credential_label mt-n9'>Password:</v-label>
-                  <v-col cols="12" sm="6">
-                    <v-text-field bg-color="white" class='password-field' v-model="password"
-                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :type="show1 ? 'text' : 'password'"
-                      @click:append="show1 = !show1" />
-                  </v-col>
-                  <v-spacer></v-spacer>
-                  
-                </v-row>
-                <div v-for="(textField, index) in textFields" :key="index">
-                <v-row >
-                  <v-col cols="2" class="ma-0 mt-3 pa-0" ><v-text-field bg-color="white" v-model="newTitle" width="10px"></v-text-field></v-col>
-                  <v-col cols="6"><v-text-field bg-color="white" v-model="newField" width="200px"></v-text-field></v-col>  
-                </v-row>
-              </div>
-              
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn 
-                  text style="cursor:pointer;"
-                  title="Hide User" 
-                  @click="hideUser()"> Cancel </v-btn>
-              <v-btn text 
-                  style="cursor:pointer;"
-                  title="Save User" 
-                  @click="saveUser()" color="rgb(0, 102, 153)">
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-form>
-        </v-card>
+        <credential-pane />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import { defineComponent } from "vue";
+import CredentialPane from './CredentialPane.vue';
 export default {
+  components:{
+    CredentialPane
+  },
   data() {
     return {
       selectedCategory: "",
@@ -187,6 +127,7 @@ export default {
         { text: "Frequently Used", icon: "mdi-heart" },
       ],
       Categories: [
+        { title: "All Categories" },
         { title: "Site Credentials" },
         { title: "Documents" },
         { title: "Form Data" },
@@ -239,14 +180,6 @@ export default {
           newTitle: this.newTitle,
 
         });
-
-        console.log("Saved...");
-        console.log(
-          "user name: " + this.UserName + "  " + "password: " + this.password
-        );
-        console.log(
-          "title name: " + this.newTitle + "  " + "new field: " + this.newField
-        );
 
         this.UserName = null
         this.password = null  
