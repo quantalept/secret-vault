@@ -16,7 +16,11 @@ const vuetify = createVuetify({
   icons: {
     defaultSet: 'mdi'
   },
-  theme
+  theme: {
+    themes: {
+      light: theme.lightTheme
+    }
+  }
 })
 
 createApp(App).use(vuetify).mount('#app')
