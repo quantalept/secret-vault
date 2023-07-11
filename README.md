@@ -1,6 +1,6 @@
 # secret-chamber
 
-For Enabling Es-lint and prettier add below codes to vs code setting.json file
+# For Enabling Es-lint and prettier add below codes to vs code setting.json file
 
 // Code/User/settings.json
 "vetur.validation.template": false
@@ -11,6 +11,7 @@ For Enabling Es-lint and prettier add below codes to vs code setting.json file
     "source.fixAll.eslint": true
   },
 }
+
 "[vue]": {
   "editor.defaultFormatter": "esbenp.prettier-vscode"
 },
