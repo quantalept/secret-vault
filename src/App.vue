@@ -4,6 +4,7 @@ import Login from "./components/Login.vue";
 import SignUp from "./components/SignUp.vue";
 import Main from "./components/Main.vue";
 import Menubar from "./components/Menubar.vue";
+import CredentialPane from './components/Pannels/CredentialPanel/CredentialPane.vue'
 
 
 export default defineComponent({
@@ -11,13 +12,11 @@ export default defineComponent({
     SignUp,    
     Main,
     Login,    
-    Menubar, 
-       
+    Menubar,
+    CredentialPane,        
     
   },
-  // data() {
-  //   return { dialog: false };
-  // },
+  
 });
 </script>
 <template>
@@ -25,10 +24,8 @@ export default defineComponent({
     <Menubar/>    
     <v-main>
       <Main />
-    </v-main>
-    
-  
- 
+    </v-main>  
+
   </v-app>
 </template>
 <style scoped>
