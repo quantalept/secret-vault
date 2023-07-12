@@ -3,22 +3,21 @@
           <v-form class="px-3">
             <v-card-text>
               <v-row>
-                <v-label>Title:</v-label>
-                <v-col cols="12" sm="6">
-                  <v-text-field v-model="credData.title" />
+                <v-label class="ml-16 mr-10" >Title:</v-label>
+                <v-col cols="12" sm="4" >
+                  <v-text-field v-model="credData.title" class="mt-4" variant="solo" density="compact"/>
                 </v-col>
                 <v-spacer></v-spacer>
                 
-                  <v-btn class='mt-5 md-5' icon="mdi-plus" style="cursor:pointer;"
-                  title="Add New Text Field"  @click="addTextField()"></v-btn>
-                  
-               
+                <v-btn class='mt-5 md-5' icon="mdi-plus" style="cursor:pointer;"
+                  title="Add New Text Field"  @click="addTextField()">
+                </v-btn>               
                 <v-btn 
                   style="cursor:pointer;"
                   title="Add to Favorite List" 
                   class='mt-5 md-5 ml-2' icon @click="addtoFavorite()"
-                  :color="isFavorite ? 'rgb(175,238,238)' : 'rgb(192,192,192)'">
-                  <v-icon color="rgb(240,255,255)">mdi-heart</v-icon>
+                  :color="isFavorite ? 'customColor1' : 'customColor4'">
+                  <v-icon color="customColor2">mdi-heart</v-icon>
                 </v-btn>
               </v-row>
               <v-divider />
@@ -38,7 +37,7 @@
               <v-btn text 
                   style="cursor:pointer;"
                   title="Save User" 
-                  @click="saveUser()" color="rgb(0, 102, 153)">
+                  @click="saveUser()" color="customColor5">
                 Save
               </v-btn>
             </v-card-actions>
@@ -47,7 +46,8 @@
 </template>
 
 <script>
-import SecretRow from './SecretRow.vue';
+import SecretRow from './SecretRow.vue'
+
 
 export default {
     components:{
@@ -77,11 +77,13 @@ export default {
 
                }
                 
-            ]
+            ],
+            
         }
 
         return {
-            credData
+            credData,
+            isFavorite:false
         }
     }
 
@@ -95,5 +97,6 @@ export default {
 .creds-view{
     margin-top: 20px;
 }
+
 
 </style>
