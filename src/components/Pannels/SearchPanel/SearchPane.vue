@@ -73,9 +73,9 @@ export default {
     margin-left: 7vh;
     margin-right: 7vh;
     margin-bottom: 14px;
-    height: 10vh;
+    height: 8vh;
 }
 .selected-catalogue {
-    border: 3px solid #6082B6;
+    border: 2px solid #6082B6;
 }
 </style>

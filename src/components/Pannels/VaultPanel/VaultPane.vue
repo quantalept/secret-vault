@@ -1,8 +1,8 @@
 <template>
   <v-card style="height: 100%"  color="primary">
   <v-list>
-    <v-list-subheader >ALL VAULTS</v-list-subheader>
-    <v-list-item v-for="(vault, i) in AllVaults" :key="i" :value="vault" color="rgb(49, 49, 204)" bg-color="primary">
+    <v-list-subheader >All Vaults</v-list-subheader>
+    <v-list-item v-for="(vault, i) in AllVaults" :key="i" :value="vault" color="#6082B6" bg-color="primary">
       <template #prepend>
         <v-icon :icon="vault.icon"></v-icon>
       </template>
@@ -42,8 +42,9 @@ export default {
 .v-list-subheader {
   color: black;
   font-size: 18px;
-  background-color: rgb(164, 166, 170);
+  background-color:#E5E4E2;
   font-weight: bold;
   justify-content: center;
 }
 </style>
+#b4c8db
