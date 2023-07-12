@@ -9,7 +9,7 @@
                 <v-text-field v-model="txtVal" density="compact" variant="solo"
                     :type="props.valueType==='text' || show ?'text':'password'"
                     class="cust-bg-text"
-                    >
+                    variant="solo">
 
                     <template #append>
                         <v-icon>mdi-content-copy</v-icon>
@@ -49,7 +49,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .cust-bg-text .v-input__control{
     background-color: white !important;
     opacity: 1 !important;
