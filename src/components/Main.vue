@@ -39,6 +39,6 @@ export default {
 
 .v-col {
   padding: 1px;
-  background-color: rgb(131, 20, 20);
+  background-color: #C0C0C0;
 }
 </style>

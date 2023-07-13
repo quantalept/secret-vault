@@ -4,7 +4,7 @@ import Login from "./components/Login.vue";
 import SignUp from "./components/SignUp.vue";
 import Main from "./components/Main.vue";
 import Menubar from "./components/Menubar.vue";
-import CredentialPane from './components/Pannels/CredentialPanel/CredentialPane.vue'
+
 
 
 export default defineComponent({
@@ -12,8 +12,7 @@ export default defineComponent({
     SignUp,    
     Main,
     Login,    
-    Menubar,
-    CredentialPane,        
+    Menubar,           
     
   },
   
@@ -23,7 +22,7 @@ export default defineComponent({
   <v-app app>
     <Menubar/>    
     <v-main>
-      <Main />
+      <Main/>
     </v-main>  
 
   </v-app>

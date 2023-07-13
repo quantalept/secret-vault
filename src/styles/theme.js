@@ -11,12 +11,9 @@ export default {
             info: '#2196F3',
             success: '#4CAF50',
             warning: '#FB8C00',
-
-            customColor3: '#FF3333',
-            customColor4: '#C0C0C0',
+            listeditem:'#3131CC',            
             dimgray: '#696969',
-            customColor1:'',
-
+            
         },
     }
 }

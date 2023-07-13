@@ -4,8 +4,9 @@
             <v-col>
                 <v-text-field placeholder="Search Items..." bg-color="white" variant="solo"></v-text-field>
             </v-col>
-            <v-list-item v-for="(Catelogues, index) in ListedCatalogue" :key="index" elevation="1" class="listed-catalogue"
-                :class="{ 'selected-catalogue': isClicked(Catelogues) }" @click="clickedDesc(Catelogues)">                
+            <v-list-item v-for="(Catelogues, index) in ListedCatalogue" :key="index" elevation="1"
+                class="listed-catalogue" :class="{ 'selected-catalogue': isClicked(Catelogues) }"
+                @click="clickedDesc(Catelogues)">
                 <v-row>
                     <v-list-item-title>
                         <v-col>
@@ -24,13 +25,12 @@
     </v-card>
 </template>
 <script>
-
 export default {
     
     data() {
         return {
-            selectedCategory: "",
-            groupOpened: false,
+            
+            
             selectedDesc: "",
             ListedCatalogue: [
                 {
@@ -73,9 +73,10 @@ export default {
     margin-left: 7vh;
     margin-right: 7vh;
     margin-bottom: 14px;
-    height: 10vh;
+    height: 8vh;
 }
+
 .selected-catalogue {
-    border: 3px solid #6082B6;
+    border: 2px solid #6082B6;
 }
 </style>
