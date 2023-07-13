@@ -1,37 +1,50 @@
 <template>
-  <v-card style="height: 100%"  color="primary">
-  <v-list>
-    <v-list-subheader >ALL VAULTS</v-list-subheader>
-    <v-list-item v-for="(vault, i) in AllVaults" :key="i" :value="vault" color="rgb(49, 49, 204)" bg-color="primary">
-      <template #prepend>
-        <v-icon :icon="vault.icon"></v-icon>
-      </template>
-      <v-list-item-title>{{ vault.text }}</v-list-item-title>
-    </v-list-item>
-  </v-list>
-  <v-divider ></v-divider>
-  <Category />
-</v-card>
+  <v-card style="height: 100%" color="primary">
+    <v-list>
+      <v-list-subheader>ALL VAULTS</v-list-subheader>
+      <v-list-item v-for="(vault, i) in allvaultsData.allVaults" :key="i" :value="vault" color="listeditem"
+        bg-color="primary">
+        <template #prepend>
+          <v-icon :icon="vault.icon"></v-icon>
+        </template>
+        <v-list-item-title :class="{ 'vaultselected': isSelected(vault.text) }" @click="clickedVault(vault.text)">
+          {{ vault.text }}</v-list-item-title>
+      </v-list-item>
+    </v-list>
+    <v-divider></v-divider>
+    <Category />
+  </v-card>
 </template>
 <script>
-import Category from './Category.vue';
+import Category from './Category.vue'
 export default {
   components: {
-   Category,
+    Category,
   },
-  data() {
-    return {
+  setup() {
+    let vaultSelected;
+    const allvaultsData = {
 
-      AllVaults: [
+      allVaults: [
         { text: "All Items", icon: "mdi-format-list-bulleted-type" },
         { text: "Favorites", icon: "mdi-star" },
         { text: "Frequently Used", icon: "mdi-heart" },
       ],
+    }
+    const isSelected = (clickedvault) => {
+      return clickedvault === vaultSelected;
+    }
 
-    };
-  },
-  
-};
+    const clickedVault = (vault) => {
+      vaultSelected = vault;
+    }
+    return {
+      allvaultsData,
+      isSelected,
+      clickedVault,
+    }
+  }
+}
 </script>
 <style scoped>
 .v-list {
@@ -39,11 +52,18 @@ export default {
   border: 2px;
   margin-top: 0px;
 }
+
 .v-list-subheader {
   color: black;
   font-size: 18px;
-  background-color: rgb(164, 166, 170);
+  background-color: #E5E4E2;
   font-weight: bold;
   justify-content: center;
+}
+
+.vaultselected {
+  font-weight: bold;
+  color: rgb(49, 49, 204);
+
 }
 </style>
