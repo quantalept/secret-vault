@@ -15,9 +15,7 @@ export default defineComponent({
        
     
   },
-  // data() {
-  //   return { dialog: false };
-  // },
+ 
 });
 </script>
 <template>
