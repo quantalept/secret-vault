@@ -8,8 +8,7 @@
             <v-col cols="8" sm="6" align-self="center">
                 <v-text-field v-model="txtVal" density="compact" variant="solo"
                     :type="props.valueType==='text' || show ?'text':'password'"
-                    class="cust-bg-text"
-                    variant="solo">
+                    class="cust-bg-text">
 
                     <template #append>
                         <v-icon>mdi-content-copy</v-icon>
