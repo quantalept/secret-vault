@@ -4,7 +4,7 @@ import Login from "./components/Login.vue";
 import SignUp from "./components/SignUp.vue";
 import Main from "./components/Main.vue";
 import Menubar from "./components/Menubar.vue";
-
+import ExtVault from "./components/ExtVault.vue";
 
 export default defineComponent({
   components: {
@@ -12,7 +12,7 @@ export default defineComponent({
     Main,
     Login,    
     Menubar, 
-       
+    ExtVault, 
     
   },
   // data() {
@@ -24,7 +24,7 @@ export default defineComponent({
   <v-app app>
     <Menubar/>    
     <v-main>
-      <Main />
+      <ExtVault />
     </v-main>
     
   
