@@ -15,9 +15,9 @@
 </template>
 
 <script>
-import CredentialPane from './Pannels/CredentialPanel/CredentialPane.vue';
-import SearchPane from './Pannels/SearchPanel/SearchPane.vue';
-import VaultPane from "./Pannels/VaultPanel/VaultPane.vue";
+import CredentialPane from './panels/CredentialPanel/CredentialPane.vue';
+import SearchPane from './panels/SearchPanel/SearchPane.vue';
+import VaultPane from "./panels/VaultPanel/VaultPane.vue";
 
 export default {
   components: {
