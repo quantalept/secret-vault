@@ -1,79 +1,57 @@
 <template>
-  <v-container class="fluid fill-height align-center justify-center">
-    <!-- <v-dialog v-model="loginDialog" pesistent width="600">  -->
-    <v-card class="mx-auto px-6 py-9" width="600" rounded elevation="15">
-      <v-toolbar color="blue" height="35">
-        <v-icon> mdi-content-save</v-icon>
-        <v-toolbar-title rounded class="d-flex justify-center"
-          >App Initialization</v-toolbar-title
-        >
-        <v-btn icon>
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
+  <v-dialog v-model="showDialog" persistent max-width="700px"  >
+    <v-card color="#E5E4E2">
+      <v-toolbar color="#C0C0C0"  height="32">
+        <v-icon>mdi-lock</v-icon>
+        <v-toolbar-title class=" text-center" style="font-family:Lucida">App Initialization</v-toolbar-title>
       </v-toolbar>
-      <br />
-      <v-label dark color="blue"
-        >Hi, Please initialize your local vault</v-label
-      >
-      <br /><br />
-      <v-form v-model="form" @submit.prevent="onSubmit">
-        <v-layout align-center>
-          <v-flex row>
-            <v-list-subheader color="black">Master Password: </v-list-subheader>
-          </v-flex>
-          <v-text-field
-            v-model="password1"
-            :readonly="loading"
-            :rules="[required]"
-            class="textalign1"
-            clearable
-            label="Master Password"
-          ></v-text-field>
-        </v-layout>
-        <v-layout>
-          <v-flex row>
-            <v-list-subheader color="black"
-              >Confirm Password:
-            </v-list-subheader>
-          </v-flex>
-          <v-text-field
-            v-model="password2"
-            :readonly="loading"
-            :rules="[required]"
-            clearable
-            label="Confirm Password"
-            class="textalign2"
-          ></v-text-field>
-        </v-layout>
-        <br />
-
-        <v-btn
-          absolute
-          top
-          :style="{ left: '50%', transform: 'translateX(-50%)' }"
-          color="primary"
-          v-on:click="save()"
-          >save</v-btn
-        >
-      </v-form>
+      <v-card-subtitle class="subtitle  text-center">Hi, Please create your vault password</v-card-subtitle>
+      <v-card-text>
+        <v-row v-for="(field, index) in inputFields" :key="index">
+          <v-col cols="4">
+            <v-label class="input-label " >{{ field.label }} :</v-label>
+          </v-col>
+          <v-col cols="6" class="input-field" >
+            <v-text-field v-model="field.value"  :type="field.type" variant="solo" class="test ml-5 " density="compact"></v-text-field>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-actions class="justify-center">
+        <v-btn variant="tonal" color="#0000FF" @click="login" class="mb-16">Unlock</v-btn>
+      </v-card-actions>
     </v-card>
-    <!-- </v-dialog> -->
-  </v-container>
+  </v-dialog>
 </template>
-<script scoped>
+
+<script>
 export default {
   data() {
     return {
-      password: "",
-    };
+      showDialog: true,
+      inputFields: [
+        { label: 'Master Password', value: '', type: 'password', },
+        { label: 'Confirm Password', value: '', type: 'password',}
+      ]
+    }
   },
-};
+ 
+}
 </script>
+
 <style scoped>
-.textalign1 {
-  margin-left: 10px;
+.subtitle {
+  margin-top: 45px;
+  font-weight: bold;
+  font-size: 18px;
+  color:black;
 }
-.textalign2 {
-  margin-left: 3px;
+.input-label {
+  font-weight: bold;
+  margin-top: 40px;
+  margin-left: 45px;
 }
+.input-field {
+  margin-top: 35px;
+}
+
 </style>
