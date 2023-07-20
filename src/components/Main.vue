@@ -6,6 +6,8 @@
       </v-col>
       <v-col md="4">
         <search-pane />
+        <list-component @item-selected="showSelectedItem" />          
+          <details-component :selectedItem="selectedItem" />
       </v-col>
       <v-col md="6">
         <credential-pane />
@@ -18,15 +20,26 @@
 import CredentialPane from './panels/CredentialPanel/CredentialPane.vue';
 import SearchPane from './panels/SearchPanel/SearchPane.vue';
 import VaultPane from "./panels/VaultPanel/VaultPane.vue";
+import ListComponent from "./ListComponent.vue";
+import DetailsComponent from "./DetailsComponent.vue";
+
 
 export default {
   components: {
     CredentialPane,
     VaultPane,
     SearchPane,
-
+    ListComponent,
+    DetailsComponent,
   },
-
+  data() {
+    return { selectedItem: null };
+  },
+  methods: {
+    showSelectedItem(item) {
+      this.selectedItem = item;
+    },
+  },
 };
 </script>
 <style scoped>
