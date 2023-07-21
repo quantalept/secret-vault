@@ -1,8 +1,8 @@
 <template>
-  <v-card style="height: 100%" color="primary">
-    <v-list>
+  <!-- <v-card style="height: 100%" color="primary"> -->
+    <v-list bg-color="primary">
       <v-list-subheader>ALL VAULTS</v-list-subheader>
-      <v-list-item v-for="(vault, i) in allvaultsData.allVaults" :key="i" :value="vault" color="listeditem"
+      <v-list-item v-for="(vault, i) in allVaults" :key="i" :value="vault" color="listeditem"
         bg-color="primary">
         <template #prepend>
           <v-icon :icon="vault.icon"></v-icon>
@@ -11,38 +11,39 @@
           {{ vault.text }}</v-list-item-title>
       </v-list-item>
     </v-list>
-    <v-divider></v-divider>
-    <Category />
-  </v-card>
+    
+  <!-- </v-card> -->
+  
 </template>
 <script>
-import Category from './Category.vue'
+//import Category from './Category.vue';
 export default {
-  components: {
-    Category,
-  },
-  setup() {
-    let vaultSelected;
-    const allvaultsData = {
-
+  // components:{Category,},
+  data() {
+    return{
+    
+    selectedItem:"",
+    vaultSelected:"",
       allVaults: [
         { text: "All Items", icon: "mdi-format-list-bulleted-type" },
         { text: "Favorites", icon: "mdi-star" },
         { text: "Frequently Used", icon: "mdi-heart" },
       ],
-    }
-    const isSelected = (clickedvault) => {
-      return clickedvault === vaultSelected;
-    }
-
-    const clickedVault = (vault) => {
-      vaultSelected = vault;
-    }
-    return {
-      allvaultsData,
-      isSelected,
-      clickedVault,
-    }
+    };
+    
+    
+  },
+  
+  methods:{
+  clickedVault(vault)  {
+      this.vaultSelected = vault;
+    },
+    isSelected(clickedvault)  {
+      return clickedvault === this.vaultSelected;
+    },
+    showSelectedItem(item) {
+      this.selectedItem = item;
+    },
   }
 }
 </script>

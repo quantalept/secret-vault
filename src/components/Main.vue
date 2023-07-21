@@ -1,13 +1,18 @@
 <template>
-  <v-container class='main-container'>
-    <v-row style="height:100%">
+  <v-container class='main-container' >
+    <v-row style="height:100%">     
+     
       <v-col md='2'>
-        <VaultPane />
+       
+        <VaultPane />        
+        <v-divider></v-divider>
+         <Category @item-selected="showSelectedItem"/>
+        
       </v-col>
+    
+
       <v-col md="4">
-        <search-pane />
-        <list-component @item-selected="showSelectedItem" />          
-          <details-component :selectedItem="selectedItem" />
+        <search-pane :selectedItem="selectedItem"/>          
       </v-col>
       <v-col md="6">
         <credential-pane />
@@ -20,17 +25,17 @@
 import CredentialPane from './panels/CredentialPanel/CredentialPane.vue';
 import SearchPane from './panels/SearchPanel/SearchPane.vue';
 import VaultPane from "./panels/VaultPanel/VaultPane.vue";
-import ListComponent from "./ListComponent.vue";
-import DetailsComponent from "./DetailsComponent.vue";
+import Category from './panels/VaultPanel/Category.vue';
+
 
 
 export default {
   components: {
     CredentialPane,
     VaultPane,
+    Category,
     SearchPane,
-    ListComponent,
-    DetailsComponent,
+    
   },
   data() {
     return { selectedItem: null };
@@ -48,6 +53,7 @@ export default {
   height: calc(100vh - 35px);
   padding: 1px;
   max-width: 100%;
+  
 }
 
 .v-col {
