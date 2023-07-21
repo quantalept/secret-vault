@@ -1,11 +1,12 @@
 <template>
     <v-card style="height: 100%" color="primary">
-        <v-list bg-color="primary">
+        <v-list bg-color="primary" v-if="selectedItem">
             <v-col>
                 <v-text-field placeholder="Search Items..." bg-color="white" variant="solo"></v-text-field>
             </v-col>
             <v-list-item v-for="(Catelogues, index) in ListedCatalogue" :key="index" elevation="1"
-                class="listed-catalogue" :class="{ 'selected-catalogue': isClicked(Catelogues) }"
+                class="listed-catalogue" 
+                :class="{ 'selected-catalogue': isClicked(Catelogues) }"
                 @click="clickedDesc(Catelogues)">
                 <v-row>
                     <v-list-item-title>
@@ -19,6 +20,8 @@
                         <v-list-item-title style="font-weight:bold;color:black;"> {{ Catelogues.title }}</v-list-item-title>
                         <v-list-item-title> {{ Catelogues.Desc }} </v-list-item-title>
                     </v-col>
+
+                    
                 </v-row>
             </v-list-item>
         </v-list>
@@ -26,11 +29,12 @@
 </template>
 <script>
 export default {
-    
+    props: {
+      selectedItem: Object
+    },
     data() {
         return {
-            
-            
+                
             selectedDesc: "",
             ListedCatalogue: [
                 {
