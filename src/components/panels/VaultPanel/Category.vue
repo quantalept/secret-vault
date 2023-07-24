@@ -1,23 +1,21 @@
 <template>
-  <v-card style="height: 79%" color="primary">
-    <v-list bg-color="primary">
-      <v-list-subheader>Categories</v-list-subheader>
-      <v-list-item
-        class="pl-14"
-        v-for="(category, j) in Categories"
-        :key="j"
-        :value="category"
-        @click="selectItem(category)"
+  <v-list bg-color="primary">
+    <v-list-subheader>Categories</v-list-subheader>
+    <v-list-item
+      class="pl-14"
+      v-for="(category, j) in Categories"
+      :key="j"
+      :value="category"
+      @click="selectCategory(category)"
+    >
+      <v-list-item-title
+        :class="{ categoryselected: isSelected(category.title) }"
+        @click="clickedCategory(category.title)"
       >
-        <v-list-item-title
-          :class="{ categoryselected: isSelected(category.title) }"
-          @click="clickedCategory(category.title)"
-        >
-          {{ category.title }}</v-list-item-title
-        >
-      </v-list-item>
-    </v-list>
-  </v-card>
+        {{ category.title }}</v-list-item-title
+      >
+    </v-list-item>
+  </v-list>
 </template>
 
 <script>
@@ -41,8 +39,8 @@ export default {
     isSelected(clickedcategory) {
       return clickedcategory === this.selectedCategory;
     },
-    selectItem(category) {
-      this.$emit("item-selected", category);
+    selectCategory(category) {
+      this.$emit("category-selected", category);
     },
   },
 };
@@ -55,7 +53,6 @@ export default {
   font-weight: bold;
   justify-content: center;
 }
-
 .categoryselected {
   font-weight: bold;
   color: rgb(49, 49, 204);
