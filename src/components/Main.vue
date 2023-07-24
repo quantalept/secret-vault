@@ -1,33 +1,30 @@
 <template>
-  <v-container class='main-container' >
-    <v-row style="height:100%">     
-     
-      <v-col md='2'>
-       
-        <VaultPane />        
-        <v-divider></v-divider>
-         <Category @item-selected="showSelectedItem"/>
-        
+  <v-container class="main-container">
+    <v-row style="height: 100%">
+      <v-col md="2">
+        <v-card style="height: 100%">
+          <VaultPane />
+          <v-divider></v-divider>
+          <Category @category-selected="showselectedCategory" />
+        </v-card>
       </v-col>
-    
-
       <v-col md="4">
-        <search-pane :selectedItem="selectedItem"/>          
+        <search-pane
+          :selectedCategory="selectedCategory"
+          @catelogue-selected="showselectedCred"
+        />
       </v-col>
       <v-col md="6">
-        <credential-pane />
+        <credential-pane :selectedCred="selectedCred" />
       </v-col>
     </v-row>
   </v-container>
 </template>
-
 <script>
-import CredentialPane from './panels/CredentialPanel/CredentialPane.vue';
-import SearchPane from './panels/SearchPanel/SearchPane.vue';
+import CredentialPane from "./panels/CredentialPanel/CredentialPane.vue";
+import SearchPane from "./panels/SearchPanel/SearchPane.vue";
 import VaultPane from "./panels/VaultPanel/VaultPane.vue";
-import Category from './panels/VaultPanel/Category.vue';
-
-
+import Category from "./panels/VaultPanel/Category.vue";
 
 export default {
   components: {
@@ -35,14 +32,16 @@ export default {
     VaultPane,
     Category,
     SearchPane,
-    
   },
   data() {
-    return { selectedItem: null };
+    return { selectedCategory: null, selectedCred: false };
   },
   methods: {
-    showSelectedItem(item) {
-      this.selectedItem = item;
+    showselectedCategory(category) {
+      this.selectedCategory = category;
+    },
+    showselectedCred(Catelogues) {
+      this.selectedCred = Catelogues;
     },
   },
 };
@@ -53,11 +52,8 @@ export default {
   height: calc(100vh - 35px);
   padding: 1px;
   max-width: 100%;
-  
-}
-
-.v-col {
+}.v-col {
   padding: 1px;
-  background-color: #C0C0C0;
+  background-color: #c0c0c0;
 }
 </style>
