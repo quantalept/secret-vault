@@ -5,7 +5,7 @@
         <v-card style="height: 100%" color="primary">
           <VaultPane />
           <v-divider></v-divider>
-          <Category @category-selected="showselectedCategory" />
+          <Category @category-selected="showselectedCategory"/>
         </v-card>
       </v-col>
       <v-col md="4">
@@ -15,7 +15,7 @@
         />
       </v-col>
       <v-col md="6">
-        <credential-pane :selectedCred="selectedCred" />
+        <credential-pane :selectedCred="selectedCred"/>
       </v-col>
     </v-row>
   </v-container>
@@ -34,7 +34,10 @@ export default {
     SearchPane,
   },
   data() {
-    return { selectedCategory: null, selectedCred: null};
+    return { 
+      selectedCategory: null, 
+      selectedCred: null
+    };
   },
   methods: {
     showselectedCategory(category) {
