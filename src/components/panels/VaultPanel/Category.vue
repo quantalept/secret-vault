@@ -12,27 +12,45 @@
         :class="{ categoryselected: isSelected(category.title) }"
         @click="clickedCategory(category.title)"
       >
-        {{ category.title }}</v-list-item-title
-      >
+        {{ category.title }}
+      </v-list-item-title>
     </v-list-item>
   </v-list>
 </template>
 
 <script>
+import { getDBInstance } from '../../js/database';
+
 export default {
   data() {
     return {
       selectedCategory: "",
       Categories: [
-        { title: "Site Credentials" },
-        { title: "Documents" },
-        { title: "Form Data" },
-        { title: "Token API" },
-        { title: "Token Key" },
+        { title: "Site Credentials", icon: "icon-credentials.png" },
+        { title: "Documents", icon: "icon-documents.png" },
+        { title: "Form Data", icon: "icon-formdata.png" },
+        { title: "Token API", icon: "icon-tokenapi.png" },
+        { title: "Token Key", icon: "icon-tokenkey.png" },
       ],
     };
   },
   methods: {
+    async insertCategoriesToDatabase() {
+      try {
+        const db = await getDBInstance();
+        
+        // Insert categories into the database
+        for (const category of this.Categories) {
+          await db.execute(`
+            INSERT INTO Category (category_name, category_icon)
+            VALUES (?, ?)
+          `, [category.title, category.icon]);
+        }
+        console.log('Categories inserted into the database successfully!');
+      } catch (error) {
+        console.error('Error inserting categories into the database:', error);
+      }
+    },
     clickedCategory(category) {
       this.selectedCategory = category;
     },
@@ -43,8 +61,13 @@ export default {
       this.$emit("category-selected", category);
     },
   },
+  created() {
+    // Insert categories into the database
+    this.insertCategoriesToDatabase();
+  },
 };
 </script>
+
 <style scoped>
 .v-list-subheader {
   color: black;
