@@ -34,9 +34,9 @@
 </template>
    
 <script>
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref,onMounted } from 'vue';
 import { usecatalogueStore } from '../../../store/catalogueStore';
-import AddCatalogueDialog from './Catal creation.vue';
+import AddCatalogueDialog from './Catalcreationdialog.vue';
 import { getDBInstance } from '../../js/database';
 
 export default defineComponent({
@@ -71,28 +71,42 @@ export default defineComponent({
       emit("catelogue-selected", catalogueStore);
     };
     const addNewItem = () => {
-      catalogueStore.addCatalogueItem(catalogueStore.newItem);
-      catalogueStore.newItem.title = '';
-      catalogueStore.newItem.Desc = '';
+      insertCatalogueToDatabase();
       closeDialog();
-      insertCataloguesToDatabase();
+      catalogueStore.addCatalogueItem();
     };
-    const insertCataloguesToDatabase = async () => {
+    const insertCatalogueToDatabase = async () => {
       try {
         const db = await getDBInstance();
 
         // Insert Catalogue into the database
-        for (const catalogue of catalogueStore.Cataloguelisted) {
-          await db.execute(`
+        const  row =  await db.execute(`
             INSERT INTO Credential_Store (cs_name, secondary_info)
             VALUES (?, ?)
-          `, [catalogue.title, catalogue.Desc]);
-        }
+          `, [catalogueStore.newItem.title, catalogueStore.newItem.Desc]);
+        catalogueStore.newItem.id = row.lastInsertId;
         console.log('Catalogue inserted into the database successfully!');
       } catch (error) {
         console.error('Error inserting Catalogue into the database:', error);
       }
     };
+    const loadcatalogues = async() => {
+      try{
+        const db = await getDBInstance();
+        const rows = await db.select (`
+        SELECT * FROM Credential_Store
+        `);
+        console.log('rows',rows);
+        for (let row of rows ) {
+          catalogueStore.Cataloguelisted.push({id: row.id, title: row.cs_name, Desc: row.secondary_info})
+        }
+      } catch(error) {
+        console.error('Error loading Catalogue into the database:', error);
+      }
+    }
+    onMounted(()=> {
+      loadcatalogues();
+    })
     return {
       props,
       catalogueStore,

@@ -5,6 +5,7 @@ let dbInstance = null;
 export async function getDBInstance() {
   if (!dbInstance) {
     dbInstance = await Database.load("sqlite:store.db");
+    
   }
   return dbInstance;
 }

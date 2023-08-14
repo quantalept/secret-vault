@@ -1,19 +1,21 @@
 import { defineStore } from 'pinia';
+import { getDBInstance } from '../components/js/database';
 
 export const usecatalogueStore = defineStore('catalogue', {
   state: () => ({
     Cataloguelisted: [],
     newItem: {
+      id: -1,
       title: '',
       Desc: '',
     },
    
   }),
   actions: {
-    addCatalogueItem(newItem) {
-      const id = Date.now();
-      this.Cataloguelisted.push({ ...newItem, id });
-      this.newItem = { title: '', Desc: '', };
+    addCatalogueItem() {
+      this.Cataloguelisted.push(this.newItem);
+      this.newItem = { id:-1,title: '', Desc: '', };
     },
+    
   },
 });

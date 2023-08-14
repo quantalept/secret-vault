@@ -57,7 +57,6 @@ export default {
       try {
         const db = await getDBInstance();
         const cs_id = props.selectedCred ? props.selectedCred.cs_id : null;
-
         // Insert Catalogue into the database
         for (const field of credentialStore.credData.fields) {
           await db.execute(`

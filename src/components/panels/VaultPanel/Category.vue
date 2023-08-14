@@ -61,7 +61,7 @@ export default {
       this.$emit("category-selected", category);
     },
   },
-  created() {
+  mounted() {
     // Insert categories into the database
     this.insertCategoriesToDatabase();
   },
