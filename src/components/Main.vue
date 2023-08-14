@@ -2,7 +2,7 @@
   <v-container class="main-container">
     <v-row style="height: 100%">
       <v-col md="2">
-        <v-card style="height: 100%">
+        <v-card style="height: 100%" color="primary">
           <VaultPane />
           <v-divider></v-divider>
           <Category @category-selected="showselectedCategory" />
@@ -34,26 +34,28 @@ export default {
     SearchPane,
   },
   data() {
-    return { selectedCategory: null, selectedCred: false };
+    return { selectedCategory: null, selectedCred: null};
   },
   methods: {
     showselectedCategory(category) {
       this.selectedCategory = category;
     },
-    showselectedCred(Catelogues) {
-      this.selectedCred = Catelogues;
+    showselectedCred(catalogueStore) {
+      this.selectedCred = catalogueStore;
     },
   },
 };
 </script>
 <style scoped>
 .v-main .main-container {
-  margin-top: 0px;
   height: calc(100vh - 35px);
   padding: 1px;
   max-width: 100%;
 }.v-col {
   padding: 1px;
   background-color: #c0c0c0;
+}
+.v-row {
+  margin-top: 1px;
 }
 </style>

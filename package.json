@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.2.0",
+    "pinia": "^2.1.6",
+    "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql#v1",
     "vue": "^3.2.45",
     "vuetify": "^3.1.4"
   },
