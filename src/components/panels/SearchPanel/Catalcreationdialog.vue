@@ -3,7 +3,7 @@
     <v-card>
       <v-card-text>
         <v-text-field v-model="catalogueStore.newItem.title" label="Title"></v-text-field>
-        <v-text-field v-model="catalogueStore.newItem.Desc" label="Description" ></v-text-field>
+        <v-text-field v-model="catalogueStore.newItem.desc" label="Description" ></v-text-field>
       </v-card-text>
     </v-card>
   </div>

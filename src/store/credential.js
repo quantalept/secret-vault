@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 export const useCredentialStore = defineStore('credential', {
   state: () => ({
     credData: {
-      title: 'Netflix',
+      title: '',
       fields: [
         {
           label: 'User Name',
@@ -15,11 +15,7 @@ export const useCredentialStore = defineStore('credential', {
           value: '', 
           valueType: 'password',
         },
-        {
-          label: 'PIN',
-          value: '', 
-          valueType: 'password',
-        },
+        
       ],
     },
   }),
@@ -32,4 +28,5 @@ export const useCredentialStore = defineStore('credential', {
       });
     },
   },
+  
 });

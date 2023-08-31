@@ -3,67 +3,113 @@
     <v-list-subheader>Categories</v-list-subheader>
     <v-list-item
       class="pl-14"
-      v-for="(category, j) in Categories"
+      v-for="(category, j) in categoriesStore.categories"
       :key="j"
       :value="category"
-      @click="selectCategory(category)"
+      @click="selectedCategory(category)"
     >
       <v-list-item-title
-        :class="{ categoryselected: isSelected(category.title) }"
-        @click="clickedCategory(category.title)"
-      >
+        :class="{ categoryselected :isSelected(category) }"
+        @click="clickedCategory(category)" >
         {{ category.title }}
       </v-list-item-title>
     </v-list-item>
+    <div class="add-category">
+      <v-text-field v-model="newCategory.title" density="compact" ></v-text-field>
+      <v-btn @click="addNewCategory" density="comfortable" icon="mdi-plus"></v-btn>
+
+    </div>
   </v-list>
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
 import { getDBInstance } from '../../js/database';
+import { usecategoriesStore } from '../../../store/categoryStore'
 
 export default {
-  data() {
-    return {
-      selectedCategory: "",
-      Categories: [
-        { title: "Site Credentials", icon: "icon-credentials.png" },
-        { title: "Documents", icon: "icon-documents.png" },
-        { title: "Form Data", icon: "icon-formdata.png" },
-        { title: "Token API", icon: "icon-tokenapi.png" },
-        { title: "Token Key", icon: "icon-tokenkey.png" },
-      ],
-    };
-  },
-  methods: {
-    async insertCategoriesToDatabase() {
+  setup() {
+    const selectedCategory = ref("");
+    const categoriesStore = usecategoriesStore();
+    const newCategory = ref({
+      title: "",
+      icon: "default-icon.png" 
+    });
+
+    const insertCategoryToDatabase = async (category) => {
       try {
         const db = await getDBInstance();
-        
-        // Insert categories into the database
-        for (const category of this.Categories) {
-          await db.execute(`
-            INSERT INTO Category (category_name, category_icon)
-            VALUES (?, ?)
-          `, [category.title, category.icon]);
-        }
-        console.log('Categories inserted into the database successfully!');
+
+        // Insert the category into the database
+        await db.execute(`
+          INSERT INTO Category (category_name, category_icon)
+          VALUES (?, ?)
+        `, [category.title, category.icon]);
+        console.log('Category inserted into the database successfully!');
       } catch (error) {
-        console.error('Error inserting categories into the database:', error);
+        console.error('Error inserting category into the database:', error);
       }
-    },
-    clickedCategory(category) {
-      this.selectedCategory = category;
-    },
-    isSelected(clickedcategory) {
-      return clickedcategory === this.selectedCategory;
-    },
-    selectCategory(category) {
-      this.$emit("category-selected", category);
-    },
-  },
-  mounted() {
-    // Insert categories into the database
-    this.insertCategoriesToDatabase();
+    };
+    
+    const loadCategoriesFromDatabase = async () => {
+      try {
+        const db = await getDBInstance();
+        const rows = await db.select(`
+        SELECT * FROM Category
+        `);
+        const loadedCategoryTitles = new Set(); 
+
+    for (let row of rows) {
+      const category = { title: row.category_name, icon: row.category_icon };
+      categoriesStore.addCategory(category);
+      loadedCategoryTitles.add(category.title);
+    }
+
+  
+    const defaultCategories = categoriesStore.defaultcateg;
+
+    for (let defaultCategory of defaultCategories) {
+      if (!loadedCategoryTitles.has(defaultCategory.title)) {
+        categoriesStore.addCategory(defaultCategory);
+        await insertCategoryToDatabase(defaultCategory);
+      }
+    }
+    console.log('Categories loaded from the database and default categories added.');
+  } catch (error) {
+    console.error('Error loading categories from the database:', error);
+  }
+};
+
+    const clickedCategory = (category) => {
+      selectedCategory.value = category;
+    };
+
+    const isSelected = (clickedcategory) => {
+      return clickedcategory === selectedCategory.value;
+    };
+
+    const addNewCategory = async () => {
+      if (newCategory.value.title.trim() !== "") {
+        const addedCategory = { ...newCategory.value };
+        categoriesStore.addCategory(addedCategory);
+        await insertCategoryToDatabase(addedCategory);
+        newCategory.value.title = "";
+      }
+    };
+
+    onMounted(()=> {
+      loadCategoriesFromDatabase();
+    })
+
+    return {
+      selectedCategory,
+      categoriesStore,
+      newCategory,
+      clickedCategory,
+      isSelected,
+      addNewCategory,
+      
+    };
   },
 };
 </script>
@@ -79,5 +125,11 @@ export default {
 .categoryselected {
   font-weight: bold;
   color: rgb(49, 49, 204);
+}
+.add-category {
+  display: flex;
+}
+.add-category v-text-field {
+  margin-right: 10px;
 }
 </style>
