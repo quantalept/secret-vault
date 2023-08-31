@@ -7,7 +7,7 @@
         
         <v-col cols="8" sm="6" align-self="center">
           <v-text-field v-model="field.value" density="compact" variant="solo"
-              :type="show ? 'text' : 'password'"
+              :type="!show ? 'text' : 'password'"
               class="cust-bg-text">
   
               <template #append>
