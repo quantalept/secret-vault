@@ -13,6 +13,7 @@ export const usecatalogueStore = defineStore('catalogue', {
   actions: {
     addCatalogueItem() {
       this.catalogueListed.push(this.newItem);
+      this.newItem = {id:-1,title:'',desc:''};
     },
     
   },
