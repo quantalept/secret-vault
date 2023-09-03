@@ -11,7 +11,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { usecatalogueStore } from '../../../store/catalogueStore'; // Make sure the import path is correct
+import { usecatalogueStore } from '../../../store/catalogueStore';
 
 export default defineComponent({
   setup() {

@@ -16,13 +16,10 @@ export default defineComponent({
       try {
         await createAndLoadDatabase();
         console.log('Database loaded successfully!');
-        // Any other initialization or logic you want to execute after database loading
       } catch (error) {
         console.error('Error loading the database:', error);
-        // Handle errors, e.g., display an error message or perform alternative actions
       }
     },
-    // Other methods and properties of your Vue component
   },
   components: {
     SignUp,    

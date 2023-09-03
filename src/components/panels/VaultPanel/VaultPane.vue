@@ -1,22 +1,12 @@
 <template>
   <v-list bg-color="primary">
     <v-list-subheader>ALL VAULTS</v-list-subheader>
-    <v-list-item
-      v-for="(vault, i) in allVaults"
-      :key="i"
-      :value="vault"
-      color="listeditem"
-      bg-color="primary"
-    >
+    <v-list-item v-for="(vault, i) in allVaults" :key="i" :value="vault" color="listeditem" bg-color="primary">
       <template #prepend>
         <v-icon :icon="vault.icon"></v-icon>
       </template>
-      <v-list-item-title
-        :class="{ vaultselected: isSelected(vault.text) }"
-        @click="clickedVault(vault.text)"
-      >
-        {{ vault.text }}</v-list-item-title
-      >
+      <v-list-item-title :class="{ vaultselected: isSelected(vault.text) }" @click="clickedVault(vault.text)">
+        {{ vault.text }}</v-list-item-title>
     </v-list-item>
   </v-list>
 </template>
@@ -48,6 +38,7 @@ export default {
   border: 2px;
   margin-top: 0px;
 }
+
 .v-list-subheader {
   color: black;
   font-size: 18px;
@@ -55,6 +46,7 @@ export default {
   font-weight: bold;
   justify-content: center;
 }
+
 .vaultselected {
   font-weight: bold;
   color: rgb(49, 49, 204);

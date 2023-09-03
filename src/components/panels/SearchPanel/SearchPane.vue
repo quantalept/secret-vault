@@ -4,15 +4,13 @@
       <v-col md="10">
         <v-text-field placeholder="Search Category..." bg-color="white" variant="solo" class="search-field">
         </v-text-field></v-col>
-        <v-col md="2">
+      <v-col md="2">
         <v-btn @click="openDialog" icon="mdi-plus-circle-outline"> </v-btn>
       </v-col>
     </v-row>
     <v-list bg-color="primary">
-      <v-list-item v-for="item in catalogueStore.catalogueListed" 
-      :key="item.id" elevation="1" class="listed-catalogue"
-        :class="{ 'selected-catalogue': isClicked(item) }"
-        @click="clickedDesc(item), selectCred(item)">
+      <v-list-item v-for="item in catalogueStore.catalogueListed" :key="item.id" elevation="1" class="listed-catalogue"
+        :class="{ 'selected-catalogue': isClicked(item) }" @click="clickedDesc(item), selectCred(item)">
         <v-row>
           <v-list-item-title>
             <v-col>
@@ -35,13 +33,13 @@
 </template>
    
 <script>
-import { defineComponent, ref,onMounted } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import { usecatalogueStore } from '../../../store/catalogueStore';
 import AddCatalogueDialog from './Catalcreationdialog.vue';
 import { getDBInstance } from '../../js/database';
 
 export default defineComponent({
- 
+
   components: {
     AddCatalogueDialog,
   },
@@ -66,16 +64,16 @@ export default defineComponent({
       return clickeddesc === selectedDesc.value;
     };
 
-    const addNewItem = () => {
-      insertCatalogueToDatabase();
+    const addNewItem = async () => {
+      await insertCatalogueToDatabase();
       closeDialog();
       catalogueStore.addCatalogueItem();
     };
-          // Insert Catalogue into the database////
+    // Insert Catalogue into the database////
     const insertCatalogueToDatabase = async () => {
       try {
         const db = await getDBInstance();
-        const  row =  await db.execute(`
+        const row = await db.execute(`
             INSERT INTO Credential_Store (cs_name, secondary_info)
             VALUES (?, ?)
           `, [catalogueStore.newItem.title, catalogueStore.newItem.desc]);
@@ -86,16 +84,16 @@ export default defineComponent({
       }
     };
     ////Load Catalogues items..///
-    const loadcatalogues = async() => {
-      try{
+    const loadcatalogues = async () => {
+      try {
         const db = await getDBInstance();
-        const rows = await db.select (`
+        const rows = await db.select(`
         SELECT * FROM Credential_Store
         `);
-        for (let row of rows ) {
-          catalogueStore.catalogueListed.push({id: row.id, title: row.cs_name, desc: row.secondary_info})
+        for (let row of rows) {
+          catalogueStore.catalogueListed.push({ id: row.id, title: row.cs_name, desc: row.secondary_info })
         }
-      } catch(error) {
+      } catch (error) {
         console.error('Error loading Catalogue into the database:', error);
       }
     };
@@ -109,7 +107,7 @@ export default defineComponent({
 
         if (result.length === 1) {
           const cs_id = result[0].cs_id;
-          emit("catelogue-selected", cs_id,selectedItem.title);
+          emit("catelogue-selected", cs_id, selectedItem.title);
         } else {
           console.error('Invalid or missing data for selected item.');
         }
@@ -118,7 +116,7 @@ export default defineComponent({
       }
     };
 
-    onMounted(()=> {
+    onMounted(() => {
       loadcatalogues();
     })
     return {
@@ -147,6 +145,7 @@ export default defineComponent({
   margin-bottom: 14px;
   height: 8vh;
 }
+
 .selected-catalogue {
   border: 2px solid #6082b6;
 }
