@@ -5,7 +5,7 @@ let dbInstance = null;
 export async function getDBInstance() {
   if (!dbInstance) {
     dbInstance = await Database.load("sqlite:store.db");
-    
+
   }
   return dbInstance;
 }
@@ -36,9 +36,9 @@ export async function createAndLoadDatabase() {
     cs_name TEXT,
     secondary_info TEXT
   )
-`);
+ `);
 
-await db.execute(`
+  await db.execute(`
   CREATE TABLE IF NOT EXISTS Credential (
     credential_id INTEGER PRIMARY KEY,
     cs_id INTEGER,
@@ -58,6 +58,5 @@ await db.execute(`
       FOREIGN KEY (category_id) REFERENCES Category(category_id)
     )
   `);
-
   console.log('Tables created and data loaded successfully!');
 }

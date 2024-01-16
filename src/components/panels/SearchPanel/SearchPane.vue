@@ -10,7 +10,7 @@
     </v-row>
     <v-list bg-color="primary">
       <v-list-item v-for="item in catalogueStore.catalogueListed" :key="item.id" elevation="1" class="listed-catalogue"
-        :class="{ 'selected-catalogue': isClicked(item) }" @click="clickedDesc(item), selectCred(item)">
+        :class="{ 'selected-catalogue': isClicked(item) }" @click="clickedDesc(item), selectCred(item) ">
         <v-row>
           <v-list-item-title>
             <v-col>
@@ -18,8 +18,7 @@
             </v-col>
           </v-list-item-title>
           <v-col>
-            <v-list-item-title style="font-weight: bold; color: black">
-              {{ item.title }}</v-list-item-title>
+            <v-list-item-title class="title"> {{ item.title }}</v-list-item-title>
             <v-list-item-title> {{ item.desc }} </v-list-item-title>
           </v-col>
         </v-row>
@@ -39,6 +38,10 @@ import AddCatalogueDialog from './Catalcreationdialog.vue';
 import { getDBInstance } from '../../js/database';
 
 export default defineComponent({
+  props: {
+    selectedCateId: Number,
+    selectedCateTitle: String
+  },
 
   components: {
     AddCatalogueDialog,
@@ -47,7 +50,6 @@ export default defineComponent({
     const catalogueStore = usecatalogueStore();
     const dialog = ref(false);
     const selectedDesc = ref("");
-
     const openDialog = () => {
       dialog.value = true;
     };
@@ -79,10 +81,40 @@ export default defineComponent({
           `, [catalogueStore.newItem.title, catalogueStore.newItem.desc]);
         catalogueStore.newItem.id = row.lastInsertId;
         console.log('Catalogue inserted into the database successfully!');
+        await insertcred_category(catalogueStore.newItem.id);
       } catch (error) {
         console.error('Error inserting Catalogue into the database:', error);
       }
     };
+    const insertcred_category = async (lastInsertId) => {
+      try {
+        const db = await getDBInstance();
+        const csid = props.selectedCateId;
+        await db.execute(`
+            INSERT INTO Credential_Category ( cs_id, category_id)  
+            VALUES (?,?)
+        `, [lastInsertId, csid])
+        console.log('Cred_cate inserted into the database successfully!');
+       
+      } catch (error) {
+        console.error('Error loading Catalogue into the database:', error);
+      }
+    }
+    const inner_join = async () => {
+      try {
+        const db = await getDBInstance();
+        const result = await db.select(`
+          SELECT Category.category_id,Category.category_name,Credential_Store.cs_id,Credential_Store.cs_name,Credential_Store.secondary_info
+          FROM Credential_Category
+          INNER JOIN Credential_Store ON  Credential_Category.cs_id=Credential_Store.cs_id
+          INNER JOIN Category ON Credential_Category.category_id=Category.category_id
+          ORDER BY Credential_Store.cs_name
+        `);
+        console.log('Inner Join Result:', result);
+      } catch (error) {
+        console.error('Error loading Catalogue into the database:', error);
+      }
+    }
     ////Load Catalogues items..///
     const loadcatalogues = async () => {
       try {
@@ -93,10 +125,12 @@ export default defineComponent({
         for (let row of rows) {
           catalogueStore.catalogueListed.push({ id: row.id, title: row.cs_name, desc: row.secondary_info })
         }
+        await inner_join();
       } catch (error) {
         console.error('Error loading Catalogue into the database:', error);
       }
     };
+
     ////Passing csid ..///
     const selectCred = async (selectedItem) => {
       try {
@@ -108,6 +142,7 @@ export default defineComponent({
         if (result.length === 1) {
           const cs_id = result[0].cs_id;
           emit("catelogue-selected", cs_id, selectedItem.title);
+          console.log(`selected function called for item: ${cs_id},Name: ${selectedItem.title}`);
         } else {
           console.error('Invalid or missing data for selected item.');
         }
@@ -130,6 +165,7 @@ export default defineComponent({
       clickedDesc,
       isClicked,
       selectCred,
+     
     };
   },
 });
@@ -138,14 +174,16 @@ export default defineComponent({
 .search-field {
   margin-left: 4vh;
 }
-
 .listed-catalogue {
-  margin-left: 8vh;
-  margin-right: 8vh;
+  margin-left: 4vh;
+  margin-right: 4vh;
   margin-bottom: 14px;
-  height: 8vh;
+  height: 9vh;
 }
-
+.title {
+  font-weight: bold;
+  color: black;
+}
 .selected-catalogue {
   border: 2px solid #6082b6;
 }
