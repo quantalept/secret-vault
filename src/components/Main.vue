@@ -5,14 +5,15 @@
         <v-card style="height: 100%" color="primary">
           <VaultPane />
           <v-divider></v-divider>
-          <Category/>
+          <Category @category-selected="handleCateItemSelected" />
         </v-card>
       </v-col>
       <v-col md="4">
-        <search-pane @catelogue-selected="handleCatalogItemSelected"/>
+        <search-pane @catelogue-selected="handleCatalogItemSelected" :selectedCateId="selectedCateId"
+          :selectedCateTitle="selectedCateTitle" />
       </v-col>
       <v-col md="6">
-        <credential-pane :selectedCsId="selectedCsId" :selectedCatalogTitle="selectedCatalogTitle"/>
+        <credential-pane :selectedCsId="selectedCsId" :selectedCatalogTitle="selectedCatalogTitle" />
       </v-col>
     </v-row>
   </v-container>
@@ -24,7 +25,7 @@ import VaultPane from "./panels/VaultPanel/VaultPane.vue";
 import Category from "./panels/VaultPanel/Category.vue";
 import { defineComponent } from "vue";
 
-export default  defineComponent ({
+export default defineComponent({
   components: {
     CredentialPane,
     VaultPane,
@@ -32,15 +33,22 @@ export default  defineComponent ({
     SearchPane,
   },
   data() {
-    return { 
+    return {
       selectedCsId: null,
-      selectedCatalogTitle: ''
+      selectedCatalogTitle: '',
+      selectedCateId: null,
+      selectedCateTitle: ''
+
     };
   },
   methods: {
     handleCatalogItemSelected(csId, catalogTitle) {
-      this.selectedCsId = csId; 
+      this.selectedCsId = csId;
       this.selectedCatalogTitle = catalogTitle;
+    },
+    handleCateItemSelected(cateId, cateTitle) {
+      this.selectedCateId = cateId;
+      this.selectedCateTitle = cateTitle;
     },
 
   },
@@ -51,10 +59,13 @@ export default  defineComponent ({
   height: calc(100vh - 35px);
   padding: 1px;
   max-width: 100%;
-}.v-col {
+}
+
+.v-col {
   padding: 1px;
   background-color: #c0c0c0;
 }
+
 .v-row {
   margin-top: 1px;
 }

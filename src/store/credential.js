@@ -6,12 +6,12 @@ export const useCredentialStore = defineStore('credential', {
       title: '',
       fields: [
         {
-          label: 'User Name',
+          label: '',
           value: '', 
           valueType: 'text',
         },
         {
-          label: 'Password',
+          label: '',
           value: '', 
           valueType: 'password',
         },
@@ -20,9 +20,9 @@ export const useCredentialStore = defineStore('credential', {
     },
   }),
   actions: {
-    addField(label, valueType) {
+    addField(valueType) {
       this.credData.fields.push({
-        label,
+        label:'',
         value: '',
         valueType,
       });

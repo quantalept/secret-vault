@@ -5,8 +5,12 @@
       <template #prepend>
         <v-icon :icon="vault.icon"></v-icon>
       </template>
-      <v-list-item-title :class="{ vaultselected: isSelected(vault.text) }" @click="clickedVault(vault.text)">
-        {{ vault.text }}</v-list-item-title>
+      <template v-slot:append>
+        <v-badge color="grey" :content="menuCount(vault.text)" inline></v-badge>
+      </template>
+      <v-list-item-title>
+        {{ vault.text }}
+      </v-list-item-title>
     </v-list-item>
   </v-list>
 </template>
@@ -20,6 +24,9 @@ export default {
         { text: "Favorites", icon: "mdi-star" },
         { text: "Frequently Used", icon: "mdi-heart" },
       ],
+      items: [],
+      fav: [],
+      freq: []
     };
   },
   methods: {
@@ -29,7 +36,19 @@ export default {
     isSelected(clickedvault) {
       return clickedvault === this.vaultSelected;
     },
-  },
+
+    menuCount(menuName) {
+      if (menuName === "All Items") {
+        return this.items.length;
+      } else if (menuName === "Favorites") {
+        return this.fav.length;
+      } else if (menuName === "Frequently Used") {
+        // Add your new menu count calculation method here
+        return this.freq.length;
+      }
+      return 0;
+    },
+  }
 };
 </script>
 <style scoped>
