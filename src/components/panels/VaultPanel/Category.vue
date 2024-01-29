@@ -1,44 +1,61 @@
 <template>
   <v-list bg-color="primary">
-    <v-list-subheader>Categories</v-list-subheader>
+    <v-list-subheader>Categories
+      <v-icon size="large" @click="toggleIconVisibility">mdi-delete-circle-outline</v-icon>
+      <!-- <v-badge color="black" inline icon="mdi-delete"> </v-badge> -->
+    </v-list-subheader>
     <v-list-item class="pl-14" v-for="(category, j) in categoriesStore.categories" :key="j" :value="category"
       @click="sharedCate(category)">
+      <template v-slot:append>
+        <v-badge color="grey" :content="CountByTitle(category.title)" inline></v-badge>
+        <v-icon @click="delete_cate(category)" v-if="toggleIcon">mdi-minus-circle-outline</v-icon>
+      </template>
       <v-list-item-title :class="{ categoryselected: isSelected(category) }" @click="clickedCategory(category)">
         {{ category.title }}
       </v-list-item-title>
     </v-list-item>
     <div>
-    <div v-if="!isAddingNewSubCate" class="icons">
-      <v-btn icon @click="addNewSubCate" >
-        <v-icon >mdi-plus</v-icon>
-      </v-btn>
-    </div>
-    <template v-if="isAddingNewSubCate">
-      <v-text-field class="add-category" v-model="categoriesStore.newItem.title" label="Enter new submenu name" density="compact"
-        ref="newCategory"></v-text-field>
+      <div v-if="!isAddingNewSubCate" class="icons">
+        <v-btn icon @click="addNewSubCate" size="small">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </div>
+      <template v-if="isAddingNewSubCate">
+        <v-text-field class="add-category" v-model="categoriesStore.newItem.title" label="Enter new submenu name"
+          density="compact" ref="newCategory"></v-text-field>
         <div class="icons">
-      <v-btn icon @click="addNewCategory" >
-        <v-icon md="2">mdi-check</v-icon>
-      </v-btn></div>
-    </template>
+          <v-btn icon @click="addNewCategory" size="small">
+            <v-icon md="2">mdi-check</v-icon>
+          </v-btn>
+        </div>
+      </template>
     </div>
-    <!-- <div class="add-category">
-      <v-text-field v-model="newCategory.title" density="compact"></v-text-field>
-      <v-btn @click="addNewCategory" density="comfortable" class="mt-5  ml-2" icon="mdi-plus"></v-btn>      
-    </div> -->
   </v-list>
 </template>
 
 <script>
-import { ref, onMounted, nextTick,reactive } from 'vue';
+import { ref } from 'vue';
 import { getDBInstance } from '../../js/database';
 import { usecategoriesStore } from '../../../store/categoryStore'
+import { insertCategoryToDatabase } from '../../js/category'
+import { deleteFromDatabase } from '../../js/category'
+
 
 export default {
   setup(props, { emit }) {
     const selectedCategory = ref("");
     const categoriesStore = usecategoriesStore();
     const isAddingNewSubCate = ref(false);
+    const toggleIcon = ref(false);
+
+
+    const toggleIconVisibility = () => {
+      toggleIcon.value = !toggleIcon.value;
+    };
+    const delete_cate = (selectedItem) => {
+      deleteFromDatabase(selectedItem)
+    };
+
     const addNewSubCate = () => {
       isAddingNewSubCate.value = true;
     };
@@ -47,51 +64,10 @@ export default {
       categoriesStore.addCategory();
       isAddingNewSubCate.value = false;
     };
-
-    const insertCategoryToDatabase = async (category) => {
-      try {
-        const db = await getDBInstance();
-
-        // Insert the category into the database
-        await db.execute(`
-          INSERT INTO Category (category_name, category_icon)
-          VALUES (?, ?)
-        `, [categoriesStore.newItem.title, categoriesStore.newItem.icon]);
-        console.log('Category inserted into the database successfully!');
-      } catch (error) {
-        console.error('Error inserting category into the database:', error);
-      }
+    const CountByTitle = (title) => {
+      const cateItem = categoriesStore.cate_count.find((item) => item.category_name === title);
+      return cateItem ? cateItem.Credential_Store_count : 0;
     };
-
-    const loadCategoriesFromDatabase = async () => {
-      try {
-        const db = await getDBInstance();
-        const rows = await db.select(`
-            SELECT * FROM Category
-        `);
-        for (let row of rows) {
-          categoriesStore.categories.push({ id: row.id, title:row.category_name, icon:row.category_icon})
-        }
-        // const loadedCategoryTitles = new Set();
-        // for (let row of rows) {
-        //   const cate = { id: row.id, title: row.category_name, icon: row.category_icon };
-        //   categoriesStore.addCategory();
-        //   loadedCategoryTitles.add(cate.title);
-        // }
-        // const defaultCategories = categoriesStore.defaultcateg;
-
-        // for (let defaultCategory of defaultCategories) {
-        //   if (!loadedCategoryTitles.has(defaultCategory.title)) {
-        //     categoriesStore.addCategory(defaultCategory);
-        //     await insertCategoryToDatabase(defaultCategory);
-        //   }
-        // }
-        console.log('Categories loaded from the database and default categories added.');
-      } catch (error) {
-        console.error('Error loading categories from the database:', error);
-      }
-    };
-
     const sharedCate = async (selectedItem) => {
       try {
         const db = await getDBInstance();
@@ -101,7 +77,6 @@ export default {
         if (result.length === 1) {
           const cate_id = result[0].category_id;
           emit("category-selected", cate_id, selectedItem.title);
-          console.log(`clicked category: ${cate_id},Name: ${selectedItem.title}`);
         } else {
           console.error('Invalid or missing data for selected item.');
         }
@@ -109,6 +84,7 @@ export default {
         console.error('Error retrieving cs_id from the database:', error);
       }
     };
+
 
     const clickedCategory = (category) => {
       selectedCategory.value = category;
@@ -119,27 +95,6 @@ export default {
     };
 
 
-    // onMounted(async () => {
-    //   await loadCategoriesFromDatabase();
-    //   $nextTick(() => {
-    //     if (newCategory.value) {
-    //       newCategory.value.title = "";
-    //       newCategory.value.focus();
-    //     }
-    //   });
-
-    // })
-    onMounted(async () => {
-      await loadCategoriesFromDatabase()
-      //.then(() => {
-      //   nextTick(() => {
-      //     if(newCategory.value) {
-      //       newCategory.value.title = "";
-      //       newCategory.value.focus();
-      //     }
-      //   });
-      // });
-    });
 
     return {
       categoriesStore,
@@ -148,7 +103,12 @@ export default {
       addNewCategory,
       sharedCate,
       addNewSubCate,
-      isAddingNewSubCate
+      isAddingNewSubCate,
+      CountByTitle,
+      deleteFromDatabase,
+      toggleIconVisibility,
+      toggleIcon,
+      delete_cate
     };
   },
 };
@@ -172,6 +132,7 @@ export default {
 .add-category v-text-field {
   margin-right: px;
 }
+
 .icons {
   text-align: center;
 }

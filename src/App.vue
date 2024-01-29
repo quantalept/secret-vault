@@ -5,7 +5,8 @@ import SignUp from "./components/SignUp.vue";
 import Main from "./components/Main.vue";
 import Menubar from "./components/Menubar.vue";
 import { createAndLoadDatabase } from './components/js/database';
-
+import { loadCategoriesFromDatabase} from './components/js/category'
+import { loadcatalogues } from "./components/js/credentialStore";
 
 export default defineComponent({
   created() {
@@ -15,6 +16,9 @@ export default defineComponent({
     async loadDatabase() {
       try {
         await createAndLoadDatabase();
+        await loadCategoriesFromDatabase();
+        await loadcatalogues();
+
         console.log('Database loaded successfully!');
       } catch (error) {
         console.error('Error loading the database:', error);

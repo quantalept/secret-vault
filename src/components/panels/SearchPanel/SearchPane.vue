@@ -1,16 +1,16 @@
 <template>
   <v-card style="height:100%" color="primary">
     <v-row class="mt-4 ">
-      <v-col md="10">
+      <v-col md="9">
         <v-text-field placeholder="Search Category..." bg-color="white" variant="solo" class="search-field">
         </v-text-field></v-col>
-      <v-col md="2">
+      <v-col>
         <v-btn @click="openDialog" icon="mdi-plus-circle-outline"> </v-btn>
-      </v-col>
+        <v-icon class="ml-5" size="x-large" @click="toggleIconVisibility">mdi-delete-circle-outline</v-icon></v-col>
     </v-row>
     <v-list bg-color="primary">
       <v-list-item v-for="item in catalogueStore.catalogueListed" :key="item.id" elevation="1" class="listed-catalogue"
-        :class="{ 'selected-catalogue': isClicked(item) }" @click="clickedDesc(item), selectCred(item) ">
+        :class="{ 'selected-item': isClicked(item) }" @click="clickedcs(item), selectCred(item)">
         <v-row>
           <v-list-item-title>
             <v-col>
@@ -19,8 +19,8 @@
           </v-list-item-title>
           <v-col>
             <v-list-item-title class="title"> {{ item.title }}</v-list-item-title>
-            <v-list-item-title> {{ item.desc }} </v-list-item-title>
-          </v-col>
+            <v-list-item-title> {{ item.desc }} </v-list-item-title></v-col>
+          <v-icon class="mr-5 mt-6" v-if="toggleIcon" @click="delete_cs(item)">mdi-minus-circle-outline</v-icon>
         </v-row>
       </v-list-item>
     </v-list>
@@ -32,10 +32,13 @@
 </template>
    
 <script>
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, watchEffect } from 'vue';
 import { usecatalogueStore } from '../../../store/catalogueStore';
 import AddCatalogueDialog from './Catalcreationdialog.vue';
 import { getDBInstance } from '../../js/database';
+import { insertCatalogueToDatabase } from '../../js/credentialStore'
+import { loadcatalogues } from '../../js/credentialStore'
+
 
 export default defineComponent({
   props: {
@@ -45,11 +48,22 @@ export default defineComponent({
 
   components: {
     AddCatalogueDialog,
+
   },
   setup(props, { emit }) {
     const catalogueStore = usecatalogueStore();
     const dialog = ref(false);
-    const selectedDesc = ref("");
+    const selecteditem = ref("");
+    const toggleIcon = ref(false);
+
+
+    const toggleIconVisibility = () => {
+      toggleIcon.value = !toggleIcon.value;
+    };
+    const delete_cs = (selectedItem) => {
+      deleteFromDatabase(selectedItem)
+    };
+
     const openDialog = () => {
       dialog.value = true;
     };
@@ -58,78 +72,24 @@ export default defineComponent({
       dialog.value = false;
 
     };
-    const clickedDesc = (clicked_desc) => {
-      selectedDesc.value = clicked_desc;
+    const clickedcs = (clicked_cs) => {
+      selecteditem.value = clicked_cs;
     };
 
-    const isClicked = (clickeddesc) => {
-      return clickeddesc === selectedDesc.value;
+    const isClicked = (clicked_cs) => {
+      return clicked_cs === selecteditem.value;
     };
 
     const addNewItem = async () => {
-      await insertCatalogueToDatabase();
       closeDialog();
+      await insertCatalogueToDatabase(selecteditem, selectCred, props.selectedCateId);
       catalogueStore.addCatalogueItem();
     };
-    // Insert Catalogue into the database////
-    const insertCatalogueToDatabase = async () => {
-      try {
-        const db = await getDBInstance();
-        const row = await db.execute(`
-            INSERT INTO Credential_Store (cs_name, secondary_info)
-            VALUES (?, ?)
-          `, [catalogueStore.newItem.title, catalogueStore.newItem.desc]);
-        catalogueStore.newItem.id = row.lastInsertId;
-        console.log('Catalogue inserted into the database successfully!');
-        await insertcred_category(catalogueStore.newItem.id);
-      } catch (error) {
-        console.error('Error inserting Catalogue into the database:', error);
-      }
-    };
-    const insertcred_category = async (lastInsertId) => {
-      try {
-        const db = await getDBInstance();
-        const csid = props.selectedCateId;
-        await db.execute(`
-            INSERT INTO Credential_Category ( cs_id, category_id)  
-            VALUES (?,?)
-        `, [lastInsertId, csid])
-        console.log('Cred_cate inserted into the database successfully!');
-       
-      } catch (error) {
-        console.error('Error loading Catalogue into the database:', error);
-      }
-    }
-    const inner_join = async () => {
-      try {
-        const db = await getDBInstance();
-        const result = await db.select(`
-          SELECT Category.category_id,Category.category_name,Credential_Store.cs_id,Credential_Store.cs_name,Credential_Store.secondary_info
-          FROM Credential_Category
-          INNER JOIN Credential_Store ON  Credential_Category.cs_id=Credential_Store.cs_id
-          INNER JOIN Category ON Credential_Category.category_id=Category.category_id
-          ORDER BY Credential_Store.cs_name
-        `);
-        console.log('Inner Join Result:', result);
-      } catch (error) {
-        console.error('Error loading Catalogue into the database:', error);
-      }
-    }
-    ////Load Catalogues items..///
-    const loadcatalogues = async () => {
-      try {
-        const db = await getDBInstance();
-        const rows = await db.select(`
-        SELECT * FROM Credential_Store
-        `);
-        for (let row of rows) {
-          catalogueStore.catalogueListed.push({ id: row.id, title: row.cs_name, desc: row.secondary_info })
-        }
-        await inner_join();
-      } catch (error) {
-        console.error('Error loading Catalogue into the database:', error);
-      }
-    };
+
+
+    watchEffect(() => {
+      loadcatalogues(props.selectedCateId);
+    });
 
     ////Passing csid ..///
     const selectCred = async (selectedItem) => {
@@ -150,6 +110,27 @@ export default defineComponent({
         console.error('Error retrieving cs_id from the database:', error);
       }
     };
+    const deleteFromDatabase = async (selectedItem) => {
+      try {
+        const db = await getDBInstance();
+        const result = await db.select(`
+        SELECT cs_id FROM Credential_Store WHERE cs_name = ? 
+        `, [selectedItem.title]);
+        if (result.length === 1) {
+          const cs_id = result[0].cs_id;
+          await db.execute(`
+            DELETE FROM Credential_Store WHERE cs_id = ?
+          `, [cs_id]);
+          console.log('Item deleted successfully!');
+          await loadcatalogues()
+
+        } else {
+          console.error('Invalid or missing data for selected item.');
+        }
+      } catch (error) {
+        console.error('Error deleting from the database:', error);
+      }
+    }
 
     onMounted(() => {
       loadcatalogues();
@@ -161,30 +142,37 @@ export default defineComponent({
       dialog,
       openDialog,
       closeDialog,
-      selectedDesc,
-      clickedDesc,
+      selecteditem,
+      clickedcs,
       isClicked,
       selectCred,
-     
+      delete_cs,
+      toggleIcon,
+      toggleIconVisibility
+
     };
   },
 });
 </script>
 <style scoped>
 .search-field {
-  margin-left: 4vh;
+  margin-left: 2vh;
 }
+
 .listed-catalogue {
   margin-left: 4vh;
   margin-right: 4vh;
   margin-bottom: 14px;
   height: 9vh;
 }
+
 .title {
   font-weight: bold;
   color: black;
 }
-.selected-catalogue {
+
+.selected-item {
   border: 2px solid #6082b6;
+
 }
 </style>

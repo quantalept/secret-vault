@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 export const usecategoriesStore = defineStore('categories', {
   state: () => ({
     categories: [],
+    cate_count:[],
     newItem: {
       id: -1,
       title: '',
