@@ -6,10 +6,9 @@
           <v-text-field v-model="field.label" type="text" @click="toggleEdit" density="compact"></v-text-field>
         </template>
         <template v-else>
-        <v-label >{{ field.label }}</v-label>
-      </template>
+          <v-label>{{ field.label }}</v-label>
+        </template>
       </v-col>
-
       <v-col cols="8" sm="6" align-self="center">
         <v-text-field v-model="field.value" density="compact" variant="solo" class="cust-bg-text" :readonly="!isEditing"
           @click="toggleEdit" :type="field.valueType === 'text' || show ? 'text' : 'password'">
