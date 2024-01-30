@@ -50,21 +50,20 @@ export default {
   setup(props) {
     const credentialStore = useCredentialStore();
     const isEditing = ref(false);
-
+    
     watchEffect(() => {
       credentialStore.credData.title = props.selectedCatalogTitle;
       loadCredentialData(props.selectedCsId);
     });
 
-
     // const addTextField = async () => {
-    //   credentialStore.add()
-    //   await saveCredentialToDatabase()
+    //   credentialStore.addField()
+    //   isEditing.value = true;
+    //   //await saveCredentialToDatabase()
     // }
     const save = async () => {
       await saveCredentialToDatabase(props.selectedCsId)
     }
-
 
     const toggleEdit = () => {
       isEditing.value = !isEditing.value;
@@ -75,7 +74,7 @@ export default {
       isFavorite: false,
       toggleEdit,
       isEditing,
-      save
+      save,
       //addTextField
 
 
