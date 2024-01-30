@@ -1,16 +1,25 @@
 <template>
   <v-card style="height:100%" color="primary">
     <v-row class="mt-4 ">
-      <v-col md="9">
-        <v-text-field placeholder="Search Category..." bg-color="white" variant="solo" class="search-field">
-        </v-text-field></v-col>
-      <v-col>
-        <v-btn @click="openDialog" icon="mdi-plus-circle-outline"> </v-btn>
-        <v-icon class="ml-5" size="x-large" @click="toggleIconVisibility">mdi-delete-circle-outline</v-icon></v-col>
+      <v-col cols="10">
+        <v-text-field placeholder="Search Category..." bg-color="white" variant="solo" class="search-field"></v-text-field>
+      </v-col>
+      <v-col class="mt-2">
+        <v-btn @click="openDialog" variant="text" icon size="large" density="compact" >
+          <v-icon size="large" color="grey">mdi-plus-circle-outline</v-icon>
+         </v-btn>
+        <v-btn variant="text" icon class="ml-2" size="large" density="compact" >
+          <v-icon size="large" color="grey" @click="toggleIconVisibility">mdi-delete-circle-outline</v-icon>
+        </v-btn>
+      </v-col>
     </v-row>
     <v-list bg-color="primary">
-      <v-list-item v-for="item in catalogueStore.catalogueListed" :key="item.id" elevation="1" class="listed-catalogue"
-        :class="{ 'selected-item': isClicked(item) }" @click="clickedcs(item), selectCred(item)">
+      <v-list-item v-for="item in catalogueStore.catalogueListed" 
+        :key="item.id" 
+         elevation="1" 
+         class="listed-catalogue"
+        :class="{ 'selected-item': isClicked(item) }" 
+        @click="clickedcs(item),selectCred(item)">
         <v-row>
           <v-list-item-title>
             <v-col>
@@ -20,7 +29,7 @@
           <v-col>
             <v-list-item-title class="title"> {{ item.title }}</v-list-item-title>
             <v-list-item-title> {{ item.desc }} </v-list-item-title></v-col>
-          <v-icon class="mr-5 mt-6" v-if="toggleIcon" @click="delete_cs(item)">mdi-minus-circle-outline</v-icon>
+          <v-icon class="mr-5 mt-6" v-if="toggleIcon" @click="deleteFromDatabase(item)">mdi-minus-circle-outline</v-icon>
         </v-row>
       </v-list-item>
     </v-list>
@@ -38,7 +47,7 @@ import AddCatalogueDialog from './Catalcreationdialog.vue';
 import { getDBInstance } from '../../js/database';
 import { insertCatalogueToDatabase } from '../../js/credentialStore'
 import { loadcatalogues } from '../../js/credentialStore'
-
+import { loadCredentialData } from '../../js/credential';
 
 export default defineComponent({
   props: {
@@ -60,10 +69,6 @@ export default defineComponent({
     const toggleIconVisibility = () => {
       toggleIcon.value = !toggleIcon.value;
     };
-    const delete_cs = (selectedItem) => {
-      deleteFromDatabase(selectedItem)
-    };
-
     const openDialog = () => {
       dialog.value = true;
     };
@@ -85,6 +90,7 @@ export default defineComponent({
       await insertCatalogueToDatabase(selecteditem, selectCred, props.selectedCateId);
       catalogueStore.addCatalogueItem();
     };
+   
 
 
     watchEffect(() => {
@@ -119,11 +125,19 @@ export default defineComponent({
         if (result.length === 1) {
           const cs_id = result[0].cs_id;
           await db.execute(`
+            DELETE FROM Credential WHERE cs_id = ?
+          `, [cs_id]);
+          console.log('Item deleted successfully!');
+          await db.execute(`
+            DELETE FROM Credential_Category WHERE cs_id = ?
+          `, [cs_id]);
+          console.log('Item deleted successfully!');
+          await db.execute(`
             DELETE FROM Credential_Store WHERE cs_id = ?
           `, [cs_id]);
           console.log('Item deleted successfully!');
-          await loadcatalogues()
-
+          await loadcatalogues();
+          await loadCredentialData();
         } else {
           console.error('Invalid or missing data for selected item.');
         }
@@ -146,9 +160,9 @@ export default defineComponent({
       clickedcs,
       isClicked,
       selectCred,
-      delete_cs,
       toggleIcon,
-      toggleIconVisibility
+      toggleIconVisibility,
+      deleteFromDatabase
 
     };
   },

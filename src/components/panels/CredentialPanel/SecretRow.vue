@@ -47,9 +47,9 @@ export default {
     };
 
     return {
-      field: computed(() => {
-        return credentialStore.credData.fields.find(f => f.label === props.field.label);
-      }),
+      // field: computed(() => {
+      //   return credentialStore.credData.fields.find(f => f.label === props.field.label);
+      // }),
       show,
       isFieldEditable,
       toggleEdit,
