@@ -11,7 +11,7 @@
           </v-col>
           <v-spacer></v-spacer>
           <v-btn class="mt-5 " icon @click="toggleEdit()">
-            <v-icon>{{ isEditing ? 'mdi-pencil' : 'mdi-eye' }}</v-icon>
+            <v-icon>{{ isEditing ? 'mdi-eye' : 'mdi-pencil' }}</v-icon>
           </v-btn>
           <v-btn class="mt-5 md-5 ml-2" icon="mdi-plus" @click="addTextField()"></v-btn>
           <v-btn class="mt-5 md-5 ml-2" icon="mdi-heart"></v-btn>
@@ -56,11 +56,11 @@ export default {
       loadCredentialData(props.selectedCsId);
     });
 
-    // const addTextField = async () => {
-    //   credentialStore.addField()
-    //   isEditing.value = true;
-    //   //await saveCredentialToDatabase()
-    // }
+    const addTextField = async () => {
+      credentialStore.addField()
+      isEditing.value = true;
+  
+    }
     const save = async () => {
       await saveCredentialToDatabase(props.selectedCsId)
     }
@@ -75,7 +75,7 @@ export default {
       toggleEdit,
       isEditing,
       save,
-      //addTextField
+      addTextField
 
 
     };

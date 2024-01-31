@@ -125,16 +125,10 @@ export default defineComponent({
         if (result.length === 1) {
           const cs_id = result[0].cs_id;
           await db.execute(`
-            DELETE FROM Credential WHERE cs_id = ?
-          `, [cs_id]);
-          console.log('Item deleted successfully!');
-          await db.execute(`
-            DELETE FROM Credential_Category WHERE cs_id = ?
-          `, [cs_id]);
-          console.log('Item deleted successfully!');
-          await db.execute(`
-            DELETE FROM Credential_Store WHERE cs_id = ?
-          `, [cs_id]);
+            DELETE FROM Credential WHERE cs_id = ?;
+            DELETE FROM Credential_Category WHERE cs_id = ?;
+            DELETE FROM Credential_Store WHERE cs_id = ?;
+          `, [cs_id,cs_id,cs_id]);
           console.log('Item deleted successfully!');
           await loadcatalogues();
           await loadCredentialData();
@@ -174,8 +168,8 @@ export default defineComponent({
 }
 
 .listed-catalogue {
-  margin-left: 4vh;
-  margin-right: 4vh;
+  margin-left: 2vh;
+  margin-right: 17px;
   margin-bottom: 14px;
   height: 9vh;
 }

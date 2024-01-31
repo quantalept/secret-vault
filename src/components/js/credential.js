@@ -10,25 +10,23 @@ export async function saveCredentialToDatabase(csid) {
         SELECT * FROM Credential
         WHERE cs_id = ?
       `, [csid]);
-
     if (existingEntry.length > 0) {
-      // Entry exists, perform an update
       for (const field of credentialStore.credData.fields) {
         await db.execute(`
             UPDATE Credential
-            SET credential_value = ?
-            WHERE cs_id= ? AND credential_label = ?
-          `, [field.value, csid, field.label]);
-
+            SET credential_value = ?,
+                credential_label = ?
+            WHERE credential_id = ?
+          `, [field.value,field.label,field.id]);
       }
       console.log('Updated the database entry successfully!');
     } else {
-      //  perform an new insert
       for (const field of credentialStore.credData.fields) {
         await db.execute(`
             INSERT INTO Credential (cs_id, credential_label, credential_value, type)
             VALUES (?, ?, ?, ?)
           `, [csid, field.label, field.value, field.valueType]);
+          field.id = field.lastInsertId;
       }
       console.log('Inserted into the database successfully!');
     }
@@ -45,6 +43,7 @@ export async function loadCredentialData(csid) {
       `, [csid]);
 
     const fields = result.map(row => ({
+      id: row.credential_id,
       label: row.credential_label,
       value: row.credential_value,
       valueType: row.type,
