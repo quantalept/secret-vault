@@ -24,7 +24,10 @@
         <v-text-field class="add-category" v-model="categoriesStore.newItem.title" label="Enter new submenu name"
           density="compact" ref="newCategory"></v-text-field>
         <div class="icons">
-          <v-btn icon @click="addNewCategory" size="small">
+          <v-btn icon  size="small" @click="closefield()" class="mr-5">
+            <v-icon md="2">mdi-close</v-icon>
+          </v-btn>
+          <v-btn icon size="small" @click="addNewCategory">
             <v-icon md="2">mdi-check</v-icon>
           </v-btn>
         </div>
@@ -58,6 +61,9 @@ export default {
 
     const addNewSubCate = () => {
       isAddingNewSubCate.value = true;
+    };
+    const closefield = () => {
+      isAddingNewSubCate.value = false;
     };
     const addNewCategory = async () => {
       await insertCategoryToDatabase();
@@ -108,7 +114,8 @@ export default {
       deleteFromDatabase,
       toggleIconVisibility,
       toggleIcon,
-      delete_cate
+      delete_cate,
+      closefield
     };
   },
 };

@@ -6,11 +6,13 @@ export const useCredentialStore = defineStore('credential', {
       title: '',
       fields: [
         {
+          id:-1,
           label: '',
           value: '', 
           valueType: 'text',
         },
         {
+          id: -2,
           label: '',
           value: '', 
           valueType: 'password',
