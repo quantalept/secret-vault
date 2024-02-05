@@ -29,13 +29,25 @@
           <v-col>
             <v-list-item-title class="title"> {{ item.title }}</v-list-item-title>
             <v-list-item-title> {{ item.desc }} </v-list-item-title></v-col>
-          <v-icon class="mr-5 mt-6" v-if="toggleIcon" @click="deleteFromDatabase(item)">mdi-minus-circle-outline</v-icon>
+          <v-icon class="mr-5 mt-6" v-if="toggleIcon" @click="showDialog(item)">mdi-minus-circle-outline</v-icon>
         </v-row>
       </v-list-item>
     </v-list>
     <v-dialog v-model="dialog" max-width="500">
       <add-catalogue-dialog />
       <v-btn @click="addNewItem">Add Item</v-btn>
+    </v-dialog>
+    <v-dialog v-model="delete_dialog" max-width="400">
+      <v-card>
+        <v-card-title>Confirm Deletion</v-card-title>
+        <v-card-text>
+          Are you sure you want to delete this item?
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="deleteItem(selecteditem)">Confirm</v-btn>
+          <v-btn @click="cancelDelete">Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </v-card>
 </template>
@@ -45,9 +57,8 @@ import { defineComponent, ref, onMounted, watchEffect } from 'vue';
 import { usecatalogueStore } from '../../../store/catalogueStore';
 import AddCatalogueDialog from './Catalcreationdialog.vue';
 import { getDBInstance } from '../../js/database';
-import { insertCatalogueToDatabase } from '../../js/credentialStore'
-import { loadcatalogues } from '../../js/credentialStore'
-import { loadCredentialData } from '../../js/credential';
+import { insertCatalogueToDatabase,loadcatalogues,deleteFromDatabase } from '../../js/credentialStore'
+
 
 export default defineComponent({
   props: {
@@ -64,6 +75,8 @@ export default defineComponent({
     const dialog = ref(false);
     const selecteditem = ref("");
     const toggleIcon = ref(false);
+    const delete_dialog = ref(false);
+    
 
 
     const toggleIconVisibility = () => {
@@ -116,28 +129,18 @@ export default defineComponent({
         console.error('Error retrieving cs_id from the database:', error);
       }
     };
-    const deleteFromDatabase = async (selectedItem) => {
-      try {
-        const db = await getDBInstance();
-        const result = await db.select(`
-        SELECT cs_id FROM Credential_Store WHERE cs_name = ? 
-        `, [selectedItem.title]);
-        if (result.length === 1) {
-          const cs_id = result[0].cs_id;
-          await db.execute(`
-            DELETE FROM Credential WHERE cs_id = ?;
-            DELETE FROM Credential_Category WHERE cs_id = ?;
-            DELETE FROM Credential_Store WHERE cs_id = ?;
-          `, [cs_id,cs_id,cs_id]);
-          console.log('Item deleted successfully!');
-          await loadcatalogues();
-          await loadCredentialData();
-        } else {
-          console.error('Invalid or missing data for selected item.');
-        }
-      } catch (error) {
-        console.error('Error deleting from the database:', error);
-      }
+    const showDialog = (selectedItem) => {
+      selecteditem.value = selectedItem;
+      delete_dialog.value = true;
+    };
+    const cancelDelete = () => {
+      delete_dialog.value = false;
+    };
+    const deleteItem = async (selectedItem) => {
+      if (selectedItem) {
+        await deleteFromDatabase(selectedItem);
+        delete_dialog.value = false; 
+    }
     }
 
     onMounted(() => {
@@ -155,8 +158,12 @@ export default defineComponent({
       isClicked,
       selectCred,
       toggleIcon,
+      delete_dialog,
       toggleIconVisibility,
-      deleteFromDatabase
+      showDialog,
+      deleteItem,
+      cancelDelete,
+
 
     };
   },

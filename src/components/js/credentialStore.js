@@ -1,7 +1,7 @@
 import { getDBInstance } from './database';
 import { usecatalogueStore } from '../../store/catalogueStore';
 import { innerjoin } from './category';
-
+import { loadCredentialData } from './credential'
 export async function insertCatalogueToDatabase(selecteditem, selectCred, cate_id) {
   try {
     const db = await getDBInstance();
@@ -62,6 +62,28 @@ export async function loadcatalogues(csid) {
     console.error('Error loading Catalogue into the database:', error);
   }
 }
-
+export async function deleteFromDatabase(selectedItem){
+  try {
+    const db = await getDBInstance();
+    const result = await db.select(`
+    SELECT cs_id FROM Credential_Store WHERE cs_name = ? 
+    `, [selectedItem.title]);
+    if (result.length === 1) {
+      const cs_id = result[0].cs_id;
+      await db.execute(`
+        DELETE FROM Credential WHERE cs_id = ?;
+        DELETE FROM Credential_Category WHERE cs_id = ?;
+        DELETE FROM Credential_Store WHERE cs_id = ?;
+      `, [cs_id,cs_id,cs_id]);
+      console.log('Item deleted successfully!');
+      await loadcatalogues();
+      await loadCredentialData();
+    } else {
+      console.error('Invalid or missing data for selected item.');
+    }
+  } catch (error) {
+    console.error('Error deleting from the database:', error);
+  }
+}
 
 
