@@ -1,14 +1,14 @@
 <template>
   <v-list bg-color="primary">
     <v-list-subheader>Categories
-      <v-icon size="large" @click="toggleIconVisibility">mdi-delete-circle-outline</v-icon>
+      <v-icon size="large" @click="toggleIconVisibility()">mdi-delete-circle-outline</v-icon>
       <!-- <v-badge color="black" inline icon="mdi-delete"> </v-badge> -->
     </v-list-subheader>
     <v-list-item class="pl-14" v-for="(category, j) in categoriesStore.categories" :key="j" :value="category"
       @click="sharedCate(category)">
       <template v-slot:append>
         <v-badge color="grey" :content="CountByTitle(category.title)" inline></v-badge>
-        <v-icon @click="delete_cate(category)" v-if="toggleIcon">mdi-minus-circle-outline</v-icon>
+        <v-icon @click="showDialog(category)" v-if="toggleIcon">mdi-minus-circle-outline</v-icon>
       </template>
       <v-list-item-title :class="{ categoryselected: isSelected(category) }" @click="clickedCategory(category)">
         {{ category.title }}
@@ -24,15 +24,27 @@
         <v-text-field class="add-category" v-model="categoriesStore.newItem.title" label="Enter new submenu name"
           density="compact" ref="newCategory"></v-text-field>
         <div class="icons">
-          <v-btn icon  size="small" @click="closefield()" class="mr-5">
-            <v-icon md="2">mdi-close</v-icon>
+          <v-btn icon  size="large" @click="closefield()" class="mr-5"  density="compact" variant="text">
+            <v-icon   color="grey">mdi-close</v-icon>
           </v-btn>
-          <v-btn icon size="small" @click="addNewCategory">
-            <v-icon md="2">mdi-check</v-icon>
+          <v-btn icon size="large" @click="addNewCategory"  density="compact" variant="text">
+            <v-icon    color="grey">mdi-check</v-icon>
           </v-btn>
         </div>
       </template>
     </div>
+    <v-dialog v-model="delete_dialog" max-width="400">
+      <v-card>
+        <v-card-title>Confirm Deletion</v-card-title>
+        <v-card-text>
+          Are you sure you want to delete this item?
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="deleteItem(selectedCategory)">Confirm</v-btn>
+          <v-btn @click="cancelDelete">Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-list>
 </template>
 
@@ -50,14 +62,13 @@ export default {
     const categoriesStore = usecategoriesStore();
     const isAddingNewSubCate = ref(false);
     const toggleIcon = ref(false);
+    const delete_dialog = ref(false);
 
 
     const toggleIconVisibility = () => {
       toggleIcon.value = !toggleIcon.value;
     };
-    const delete_cate = (selectedItem) => {
-      deleteFromDatabase(selectedItem)
-    };
+    
 
     const addNewSubCate = () => {
       isAddingNewSubCate.value = true;
@@ -99,6 +110,19 @@ export default {
     const isSelected = (clickedcategory) => {
       return clickedcategory === selectedCategory.value;
     };
+    const showDialog = (selectedItem) => {
+      selectedCategory.value = selectedItem;
+      delete_dialog.value = true;
+    };
+    const cancelDelete = () => {
+      delete_dialog.value = false;
+    };
+    const deleteItem = async (selectedItem) => {
+      if (selectedItem) {
+        await deleteFromDatabase(selectedItem);
+        delete_dialog.value = false; 
+    }
+    }
 
 
 
@@ -111,11 +135,16 @@ export default {
       addNewSubCate,
       isAddingNewSubCate,
       CountByTitle,
-      deleteFromDatabase,
       toggleIconVisibility,
       toggleIcon,
-      delete_cate,
-      closefield
+      delete_dialog,
+      closefield,
+      showDialog,
+      cancelDelete,
+      deleteItem,
+      selectedCategory
+
+
     };
   },
 };
