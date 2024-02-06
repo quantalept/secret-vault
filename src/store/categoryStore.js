@@ -23,6 +23,8 @@ export const usecategoriesStore = defineStore('categories', {
       this.categories.push(this.newItem);
       this.newItem = {id:-1,title:'',icon:''};
     },
-   
+    clearCategory() {      
+      this.newItem = {id:-1,title:'',icon:''};
+    },
   },
 });

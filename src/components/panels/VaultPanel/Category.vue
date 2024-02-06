@@ -1,8 +1,12 @@
 <template>
   <v-list bg-color="primary">
-    <v-list-subheader>Categories
-      <v-icon size="large" @click="toggleIconVisibility()">mdi-delete-circle-outline</v-icon>
-      <!-- <v-badge color="black" inline icon="mdi-delete"> </v-badge> -->
+    <v-list-subheader>
+      <v-row>
+        <v-col class="category-class"> Categories </v-col>
+        <v-col class="icon-align">
+          <v-icon size="x-large" @click="toggleIconVisibility">mdi-pencil-circle-outline</v-icon>
+        </v-col>        
+      </v-row>
     </v-list-subheader>
     <v-list-item class="pl-14" v-for="(category, j) in categoriesStore.categories" :key="j" :value="category"
       @click="sharedCate(category)">
@@ -31,6 +35,14 @@
             <v-icon    color="grey">mdi-check</v-icon>
           </v-btn>
         </div>
+        <v-dialog v-model="mdialog" max-width="500">
+          <v-card>
+            <v-card-title>{{ dialogMessage }}</v-card-title>
+            <v-card-actions>
+              <v-btn class="btn-align" @click="closemDialog">OK</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </template>
     </div>
     <v-dialog v-model="delete_dialog" max-width="400">
@@ -62,9 +74,19 @@ export default {
     const categoriesStore = usecategoriesStore();
     const isAddingNewSubCate = ref(false);
     const toggleIcon = ref(false);
-    const delete_dialog = ref(false);
-
-
+    const delete_dialog = ref(false);    
+    const dialogMessage = ref("");
+    const mdialog = ref(false);
+    const showmDialog = (mtitle) => {
+      dialogMessage.value = mtitle;          
+      openmDialog();     
+      };
+    const openmDialog = () => {
+      mdialog.value = true;
+    };
+    const closemDialog = () => {
+      mdialog.value = false;
+    };    
     const toggleIconVisibility = () => {
       toggleIcon.value = !toggleIcon.value;
     };
@@ -75,12 +97,30 @@ export default {
     };
     const closefield = () => {
       isAddingNewSubCate.value = false;
+      categoriesStore.clearCategory();
     };
+   
     const addNewCategory = async () => {
-      await insertCategoryToDatabase();
-      categoriesStore.addCategory();
-      isAddingNewSubCate.value = false;
-    };
+    if (categoriesStore.newItem.title.trim() !== "") {
+      const db = await getDBInstance();
+      const result_ui = await db.select(
+      `
+      SELECT * FROM Category 
+      WHERE category_name = ? 
+      `,
+      [categoriesStore.newItem.title]
+      );
+      if (result_ui.length === 0) {  
+        await insertCategoryToDatabase();        
+        isAddingNewSubCate.value = false;       
+      } else {          
+          showmDialog("Category is already exists!");          
+        }
+      } else {        
+        showmDialog("Empty data is not allowed");
+      }
+
+    };    
     const CountByTitle = (title) => {
       const cateItem = categoriesStore.cate_count.find((item) => item.category_name === title);
       return cateItem ? cateItem.Credential_Store_count : 0;
@@ -142,8 +182,12 @@ export default {
       showDialog,
       cancelDelete,
       deleteItem,
-      selectedCategory
+      selectedCategory,
 
+      showmDialog,
+      mdialog,
+      closemDialog,
+      dialogMessage,
 
     };
   },
@@ -151,13 +195,21 @@ export default {
 </script>
 
 <style scoped>
-.v-list-subheader {
+
+.category-class{
   color: black;
-  font-size: 18px;
-  background: #e5e4e2;
+  font-size: 18px;  
   font-weight: bold;
-  justify-content: center;
+  margin-left: 80px;
 }
+.icon-align{
+  margin-left: 37px;
+  
+}
+.v-list-subheader{
+  background: #e5e4e2;
+}
+
 
 .categoryselected {
   font-weight: bold;

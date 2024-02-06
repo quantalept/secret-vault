@@ -9,7 +9,7 @@
           <v-icon size="large" color="grey">mdi-plus-circle-outline</v-icon>
          </v-btn>
         <v-btn variant="text" icon class="ml-2" size="large" density="compact" >
-          <v-icon size="large" color="grey" @click="toggleIconVisibility">mdi-delete-circle-outline</v-icon>
+          <v-icon size="large" color="grey" @click="toggleIconVisibility">{{ currentIcon }}</v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -35,8 +35,22 @@
     </v-list>
     <v-dialog v-model="dialog" max-width="500">
       <add-catalogue-dialog />
-      <v-btn @click="addNewItem">Add Item</v-btn>
+      <v-card>
+        <v-row justify="center" class="mb-3 mt-3">
+          <v-btn variant="text" @click="closeDialog">Cancel</v-btn>
+          <v-btn variant="text" @click="addNewItem">Add Item</v-btn>
+        </v-row>
+      </v-card>
+      <v-dialog v-model="mdialog" max-width="500">
+      <v-card>
+        <v-card-title>{{ dialogMessage }}</v-card-title>
+          <v-card-actions>
+            <v-btn class="btn-align" @click="closemDialog">OK</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
+    </v-dialog>
+
     <v-dialog v-model="delete_dialog" max-width="400">
       <v-card>
         <v-card-title>Confirm Deletion</v-card-title>
@@ -76,19 +90,35 @@ export default defineComponent({
     const selecteditem = ref("");
     const toggleIcon = ref(false);
     const delete_dialog = ref(false);
-    
-
+    const currentIcon = ref("mdi-delete-circle-outline");
+    const delIcon = ref("mdi-delete-circle-outline");
+    const checkIcon = ref("mdi-close-circle-outline");
+    const dialogMessage = ref("");
+    const mdialog = ref(false);
 
     const toggleIconVisibility = () => {
       toggleIcon.value = !toggleIcon.value;
+      currentIcon.value =
+      currentIcon.value === delIcon.value ? checkIcon.value : delIcon.value;
     };
+    const showmDialog = (mtitle) => {
+      dialogMessage.value = mtitle;         
+      openmDialog();     
+      };
+
+    const openmDialog = () => {
+      mdialog.value = true;
+    };
+    const closemDialog = () => {
+      mdialog.value = false;       
+    };
+
     const openDialog = () => {
       dialog.value = true;
     };
 
     const closeDialog = () => {
-      dialog.value = false;
-
+      dialog.value = false;      
     };
     const clickedcs = (clicked_cs) => {
       selecteditem.value = clicked_cs;
@@ -99,12 +129,26 @@ export default defineComponent({
     };
 
     const addNewItem = async () => {
-      closeDialog();
-      await insertCatalogueToDatabase(selecteditem, selectCred, props.selectedCateId);
-      catalogueStore.addCatalogueItem();
+      if (catalogueStore.newItem.title.trim() !== "") {
+        const db = await getDBInstance();
+        const result_ui = await db.select(
+          `
+         SELECT * FROM Credential_Store 
+         WHERE cs_name = ?
+         `,
+          [catalogueStore.newItem.title]
+        );
+        if (result_ui.length === 0) {          
+          await insertCatalogueToDatabase(selecteditem, selectCred, props.selectedCateId);
+          catalogueStore.addCatalogueItem();
+          closeDialog();
+        } else {                    
+          showmDialog("Catalogue Title is already exists!");
+        }
+        } else {        
+          showmDialog("Empty data is not allowed");
+        }
     };
-   
-
 
     watchEffect(() => {
       loadcatalogues(props.selectedCateId);
@@ -164,6 +208,13 @@ export default defineComponent({
       deleteItem,
       cancelDelete,
 
+      currentIcon,
+      delIcon,
+      checkIcon,
+      showmDialog,
+      mdialog,
+      closemDialog,
+      dialogMessage,
 
     };
   },

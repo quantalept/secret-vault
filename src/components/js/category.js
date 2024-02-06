@@ -27,21 +27,12 @@ export async function insertDefaultcategories() {
 export async function insertCategoryToDatabase() {
   try {
     const db = await getDBInstance();
-    const categoriesStore = usecategoriesStore();
-    const result = await db.select(`
-          SELECT * FROM Category 
-          WHERE category_name = ? 
-        `, [categoriesStore.newItem.title]);
-
-    if (result.length === 0) {
+    const categoriesStore = usecategoriesStore();    
       await db.execute(`
           INSERT INTO Category (category_name, category_icon)
           VALUES (?, ?)
        `, [categoriesStore.newItem.title, categoriesStore.newItem.icon]);
-      console.log('Category inserted into the database successfully!');
-    } else {
-      console.log(`Category '${categoriesStore.newItem.title}' already exists. Skipping insertion.`);
-    }
+      console.log('Category inserted into the database successfully!');    
   } catch (error) {
     console.error('Error inserting category into the database:', error);
   }
