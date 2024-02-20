@@ -5,6 +5,7 @@ import App from './App.vue'
 import theme from './styles/theme.js'
 import { createPinia } from 'pinia';
 
+
 // Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
@@ -22,7 +23,8 @@ const vuetify = createVuetify({
     themes: {
       light: theme.lightTheme
     }
-  }
+  },
+  
 })
 const pinia = createPinia();
 

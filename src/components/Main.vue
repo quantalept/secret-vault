@@ -5,7 +5,7 @@
         <v-card style="height: 100%" color="primary">
           <VaultPane />
           <v-divider></v-divider>
-          <Category @category-selected="handleCateItemSelected" />
+          <Category @category-selected="handleCateItemSelected" /> 
         </v-card>
       </v-col>
       <v-col md="4">

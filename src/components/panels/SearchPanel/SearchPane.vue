@@ -33,23 +33,8 @@
         </v-row>
       </v-list-item>
     </v-list>
-    <v-dialog v-model="dialog" max-width="500">
-      <add-catalogue-dialog />
-      <v-card>
-        <v-row justify="center" class="mb-3 mt-3">
-          <v-btn variant="text" @click="closeDialog">Cancel</v-btn>
-          <v-btn variant="text" @click="addNewItem">Add Item</v-btn>
-        </v-row>
-      </v-card>
-      <v-dialog v-model="mdialog" max-width="500">
-      <v-card>
-        <v-card-title>{{ dialogMessage }}</v-card-title>
-          <v-card-actions>
-            <v-btn class="btn-align" @click="closemDialog">OK</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    </v-dialog>
+      <AddCatalogueDialog v-model="dialog" @add-item="addNewItem" @cancel="closeDialog"/>
+      <Dialog v-model="mdialog" :dialogTitle="dialogMessage" @msg-dialog="closemDialog" />   
 
     <v-dialog v-model="delete_dialog" max-width="400">
       <v-card>
@@ -72,16 +57,18 @@ import { usecatalogueStore } from '../../../store/catalogueStore';
 import AddCatalogueDialog from './Catalcreationdialog.vue';
 import { getDBInstance } from '../../js/database';
 import { insertCatalogueToDatabase,loadcatalogues,deleteFromDatabase } from '../../js/credentialStore'
-
+import  Dialog from '../Dialog.vue';
 
 export default defineComponent({
   props: {
     selectedCateId: Number,
-    selectedCateTitle: String
+    selectedCateTitle: String,
+    
   },
 
   components: {
     AddCatalogueDialog,
+    Dialog,
 
   },
   setup(props, { emit }) {
@@ -110,16 +97,19 @@ export default defineComponent({
       mdialog.value = true;
     };
     const closemDialog = () => {
-      mdialog.value = false;       
+      mdialog.value = false;  
+          
     };
 
     const openDialog = () => {
       dialog.value = true;
     };
-
+    
     const closeDialog = () => {
-      dialog.value = false;      
+      dialog.value = false;
+      catalogueStore.clearCatalogueItem();      
     };
+    
     const clickedcs = (clicked_cs) => {
       selecteditem.value = clicked_cs;
     };
@@ -127,7 +117,7 @@ export default defineComponent({
     const isClicked = (clicked_cs) => {
       return clicked_cs === selecteditem.value;
     };
-
+    
     const addNewItem = async () => {
       if (catalogueStore.newItem.title.trim() !== "") {
         const db = await getDBInstance();
@@ -149,6 +139,7 @@ export default defineComponent({
           showmDialog("Empty data is not allowed");
         }
     };
+    
 
     watchEffect(() => {
       loadcatalogues(props.selectedCateId);
@@ -215,6 +206,7 @@ export default defineComponent({
       mdialog,
       closemDialog,
       dialogMessage,
+      
 
     };
   },
