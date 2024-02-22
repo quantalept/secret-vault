@@ -35,19 +35,7 @@
     </v-list>
       <AddCatalogueDialog v-model="dialog" @add-item="addNewItem" @cancel="closeDialog"/>
       <Dialog v-model="mdialog" :dialogTitle="dialogMessage" @msg-dialog="closemDialog" />   
-
-    <v-dialog v-model="delete_dialog" max-width="400">
-      <v-card>
-        <v-card-title>Confirm Deletion</v-card-title>
-        <v-card-text>
-          Are you sure you want to delete this item?
-        </v-card-text>
-        <v-card-actions>
-          <v-btn @click="deleteItem(selecteditem)">Confirm</v-btn>
-          <v-btn @click="cancelDelete">Cancel</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+      <deleteDialog v-model="delete_dialog" @delete-confirm="deleteItem(selecteditem)" @cancel-delete="cancelDelete"/>    
   </v-card>
 </template>
    
@@ -58,6 +46,7 @@ import AddCatalogueDialog from './Catalcreationdialog.vue';
 import { getDBInstance } from '../../js/database';
 import { insertCatalogueToDatabase,loadcatalogues,deleteFromDatabase } from '../../js/credentialStore'
 import  Dialog from '../Dialog.vue';
+import deleteDialog from '../deleteDialog.vue';
 
 export default defineComponent({
   props: {
@@ -69,7 +58,7 @@ export default defineComponent({
   components: {
     AddCatalogueDialog,
     Dialog,
-
+    deleteDialog,
   },
   setup(props, { emit }) {
     const catalogueStore = usecatalogueStore();
@@ -206,6 +195,7 @@ export default defineComponent({
       mdialog,
       closemDialog,
       dialogMessage,
+      
       
 
     };

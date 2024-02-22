@@ -3,9 +3,9 @@
     <v-row style="height: 100%">
       <v-col md="2">
         <v-card style="height: 100%" color="primary">
-          <VaultPane />
+          <VaultPane ref="VaultPane" @vault-selected="onVaultSelected"/>
           <v-divider></v-divider>
-          <Category @category-selected="handleCateItemSelected" /> 
+          <Category ref="Category" @category-selected="handleCateItemSelected" /> 
         </v-card>
       </v-col>
       <v-col md="4">
@@ -49,6 +49,11 @@ export default defineComponent({
     handleCateItemSelected(cateId, cateTitle) {
       this.selectedCateId = cateId;
       this.selectedCateTitle = cateTitle;
+      this.$refs.VaultPane.vaultSelected = ""; // Clear category selection
+    },
+    onVaultSelected(vaultText) {
+      // Handle vault selection
+      this.$refs.Category.selectedCategory = ""; // Clear category selection
     },
 
   },

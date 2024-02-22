@@ -24,16 +24,12 @@
             inline>
           </v-badge>
           <v-icon @click="showDialog(category)" v-if="toggleIcon">mdi-minus-circle-outline</v-icon>
-        </template>
-        <!-- *********************************** -->
+        </template>        
         <v-list-item-title
-          :class="{ categoryselected: isSelected(category) }"
-          @click="clickedCategory(category)">
+          :class="{ categoryselected: isSelected(category.title) }" >
           {{ category.title }}
-        </v-list-item-title>
-        <!-- *********************************** -->
+        </v-list-item-title>        
       </v-list-item>
-
       <div>
         <div v-if="!isAddingNewSubCate" class="icons">
           <v-btn icon @click="addNewSubCate" size="small">
@@ -68,34 +64,12 @@
             >
               <v-icon color="grey">mdi-check</v-icon>
             </v-btn>
-          </div>
-
-          <!-- <v-dialog v-model="mdialog" max-width="500">
-          <v-card>
-            <v-card-title>{{ dialogMessage }}</v-card-title>
-            <v-card-actions>
-              <v-btn class="btn-align" @click="closemDialog">OK</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog> -->
-          <Dialog
-            v-model="mdialog"
-            :dialogTitle="dialogMessage"
-            @click="closemDialog"
-          />
+          </div>          
+          <Dialog v-model="mdialog" :dialogTitle="dialogMessage" @click="closemDialog" />
         </template>
       </div>
-    </div>
-    <v-dialog v-model="delete_dialog" max-width="400">
-      <v-card>
-        <v-card-title>Confirm Deletion</v-card-title>
-        <v-card-text> Are you sure you want to delete this item? </v-card-text>
-        <v-card-actions>
-          <v-btn @click="deleteItem(selectedCategory)">Confirm</v-btn>
-          <v-btn @click="cancelDelete">Cancel</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    </div>    
+    <deleteDialog v-model="delete_dialog" @delete-confirm="deleteItem(selectedCategory)" @cancelDelete="cancelDelete" />
   </v-list>
 </template>
 
@@ -106,9 +80,12 @@ import { usecategoriesStore } from "../../../store/categoryStore";
 import { insertCategoryToDatabase, loadCategoriesFromDatabase } from "../../js/category";
 import { deleteFromDatabase } from "../../js/category";
 import Dialog from "../Dialog.vue";
+import deleteDialog from '../deleteDialog.vue';
+
 export default {
   components: {
     Dialog,
+    deleteDialog,
   },
 
   setup(props, { emit }) {
@@ -128,8 +105,7 @@ export default {
       mdialog.value = true;
     };
     const closemDialog = () => {
-      mdialog.value = false;
-      //categoriesStore.clearCategory();
+      mdialog.value = false;      
     };
     const toggleIconVisibility = () => {
       toggleIcon.value = !toggleIcon.value;
@@ -172,7 +148,7 @@ export default {
       );
       return cateItem ? cateItem.Credential_Store_count : 0;
     };
-    // <!-- *********************************** 
+     
     const sharedCate = async (selectedItem) => {
       try {
         const db = await getDBInstance();
@@ -184,6 +160,7 @@ export default {
         );
         if (result.length === 1) {
           const cate_id = result[0].category_id;
+          selectedCategory.value=selectedItem.title;
           emit("category-selected", cate_id, selectedItem.title);
         } else {
           console.error("Invalid or missing data for selected item.");
@@ -192,16 +169,15 @@ export default {
         console.error("Error retrieving cs_id from the database:", error);
       }
     };
-    // <!-- *********************************** 
-    // <!-- *********************************** 
-    const clickedCategory = (category) => {
-      selectedCategory.value = category;
-    };
+    
+    // const clickedCategory = (category) => {
+    //   selectedCategory.value = category;
+    // };
 
     const isSelected = (clicked_category) => {
       return clicked_category === selectedCategory.value;
     };
-    // <!-- *********************************** 
+   
 
     const showDialog = (selectedItem) => {
       selectedCategory.value = selectedItem;
@@ -219,7 +195,7 @@ export default {
 
     return {
       categoriesStore,
-      clickedCategory,
+      //clickedCategory,
       isSelected,
       addNewCategory,
       sharedCate,
