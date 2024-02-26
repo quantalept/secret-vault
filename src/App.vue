@@ -29,9 +29,7 @@ export default defineComponent({
     SignUp,    
     Main,
     Login,    
-    Menubar,     
-     
-    
+    Menubar, 
   },
   
 });
@@ -43,7 +41,8 @@ export default defineComponent({
       <Main/> 
          
     </v-main>  
-
+    
+    
   </v-app>
 </template>
 <style scoped>
