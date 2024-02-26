@@ -15,6 +15,8 @@ export const usecatalogueStore = defineStore('catalogue', {
       this.catalogueListed.push(this.newItem);
       this.newItem = {id:-1,title:'',desc:''};
     },
-    
+    clearCatalogueItem() {      
+      this.newItem = {id:-1,title:'',desc:''};
+    },
   },
 });

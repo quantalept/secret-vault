@@ -9,7 +9,7 @@
           <v-icon size="large" color="grey">mdi-plus-circle-outline</v-icon>
          </v-btn>
         <v-btn variant="text" icon class="ml-2" size="large" density="compact" >
-          <v-icon size="large" color="grey" @click="toggleIconVisibility">mdi-delete-circle-outline</v-icon>
+          <v-icon size="large" color="grey" @click="toggleIconVisibility">{{ currentIcon }}</v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -32,23 +32,10 @@
           <v-icon class="mr-5 mt-6" v-if="toggleIcon" @click="showDialog(item)">mdi-minus-circle-outline</v-icon>
         </v-row>
       </v-list-item>
-    </v-list>
-    <v-dialog v-model="dialog" max-width="500">
-      <add-catalogue-dialog />
-      <v-btn @click="addNewItem">Add Item</v-btn>
-    </v-dialog>
-    <v-dialog v-model="delete_dialog" max-width="400">
-      <v-card>
-        <v-card-title>Confirm Deletion</v-card-title>
-        <v-card-text>
-          Are you sure you want to delete this item?
-        </v-card-text>
-        <v-card-actions>
-          <v-btn @click="deleteItem(selecteditem)">Confirm</v-btn>
-          <v-btn @click="cancelDelete">Cancel</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    </v-list>    
+    <AddCatalogueDialog v-model="dialog" @add-item="addNewItem" @cancel="closeDialog"/>
+    <Dialog v-model="mdialog" :dialogTitle="dialogMessage" @msg-dialog="closemDialog" />   
+    <deleteDialog v-model="delete_dialog" @delete-confirm="deleteItem(selecteditem)" @cancel-delete="cancelDelete"/>    
   </v-card>
 </template>
    
@@ -58,7 +45,8 @@ import { usecatalogueStore } from '../../../store/catalogueStore';
 import AddCatalogueDialog from './Catalcreationdialog.vue';
 import { getDBInstance } from '../../js/database';
 import { insertCatalogueToDatabase,loadcatalogues,deleteFromDatabase } from '../../js/credentialStore'
-
+import  Dialog from '../Dialog.vue';
+import deleteDialog from '../deleteDialog.vue';
 
 export default defineComponent({
   props: {
@@ -68,6 +56,8 @@ export default defineComponent({
 
   components: {
     AddCatalogueDialog,
+    Dialog,
+    deleteDialog,
 
   },
   setup(props, { emit }) {
@@ -76,11 +66,28 @@ export default defineComponent({
     const selecteditem = ref("");
     const toggleIcon = ref(false);
     const delete_dialog = ref(false);
-    
-
+    const currentIcon = ref("mdi-delete-circle-outline");
+    const delIcon = ref("mdi-delete-circle-outline");
+    const checkIcon = ref("mdi-close-circle-outline");
+    const dialogMessage = ref("");
+    const mdialog = ref(false);
 
     const toggleIconVisibility = () => {
       toggleIcon.value = !toggleIcon.value;
+      currentIcon.value =
+      currentIcon.value === delIcon.value ? checkIcon.value : delIcon.value;
+    };
+    const showmDialog = (mtitle) => {
+      dialogMessage.value = mtitle;         
+      openmDialog();     
+      };
+
+    const openmDialog = () => {
+      mdialog.value = true;
+    };
+    const closemDialog = () => {
+      mdialog.value = false;  
+          
     };
     const openDialog = () => {
       dialog.value = true;
@@ -88,7 +95,7 @@ export default defineComponent({
 
     const closeDialog = () => {
       dialog.value = false;
-
+      catalogueStore.clearCatalogueItem();
     };
     const clickedcs = (clicked_cs) => {
       selecteditem.value = clicked_cs;
@@ -99,13 +106,28 @@ export default defineComponent({
     };
 
     const addNewItem = async () => {
-      closeDialog();
-      await insertCatalogueToDatabase(selecteditem, selectCred, props.selectedCateId);
-      catalogueStore.addCatalogueItem();
+      if (catalogueStore.newItem.title.trim() !== "") {
+        const db = await getDBInstance();
+        const result_ui = await db.select(
+          `
+         SELECT * FROM Credential_Store 
+         WHERE cs_name = ?
+         `,
+          [catalogueStore.newItem.title]
+        );
+        if (result_ui.length === 0) {
+          await insertCatalogueToDatabase(selecteditem, selectCred, props.selectedCateId);
+          catalogueStore.addCatalogueItem();          
+        closeDialog();
+      } else {                    
+          showmDialog("Catalogue Title is already exists!");
+        }
+        } else {        
+          showmDialog("Empty data is not allowed");
+        }
+
     };
    
-
-
     watchEffect(() => {
       loadcatalogues(props.selectedCateId);
     });
@@ -164,6 +186,13 @@ export default defineComponent({
       deleteItem,
       cancelDelete,
 
+      currentIcon,
+      delIcon,
+      checkIcon,
+      showmDialog,
+      mdialog,
+      closemDialog,
+      dialogMessage,
 
     };
   },

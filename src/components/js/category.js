@@ -28,20 +28,11 @@ export async function insertCategoryToDatabase() {
   try {
     const db = await getDBInstance();
     const categoriesStore = usecategoriesStore();
-    const result = await db.select(`
-          SELECT * FROM Category 
-          WHERE category_name = ? 
-        `, [categoriesStore.newItem.title]);
-
-    if (result.length === 0) {
       await db.execute(`
           INSERT INTO Category (category_name, category_icon)
           VALUES (?, ?)
        `, [categoriesStore.newItem.title, categoriesStore.newItem.icon]);
       console.log('Category inserted into the database successfully!');
-    } else {
-      console.log(`Category '${categoriesStore.newItem.title}' already exists. Skipping insertion.`);
-    }
   } catch (error) {
     console.error('Error inserting category into the database:', error);
   }
@@ -87,9 +78,11 @@ export async function innerjoin() {
 export async function deleteFromDatabase (selectedItem)  {
   try {
     const db = await getDBInstance();
+    console.log("---------",selectedItem);
     const result = await db.select(`
-    SELECT category_id FROM Category WHERE category_name = ? 
+    SELECT category_id, category_name FROM Category WHERE category_name = ? 
     `, [selectedItem.title]);
+    console.log("-------------",result);
     if (result.length === 1) {
       const id = result[0].category_id;
       await db.execute(`
@@ -105,3 +98,4 @@ export async function deleteFromDatabase (selectedItem)  {
     console.error('Error deleting from the database:', error);
   }
 }
+

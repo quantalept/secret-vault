@@ -1,7 +1,9 @@
 <template>
-  <v-list bg-color="primary">
+  <v-list>
     <v-list-subheader>ALL VAULTS</v-list-subheader>
-    <v-list-item v-for="(vault, i) in allVaults" :key="i" :value="vault" color="listeditem" bg-color="primary">
+    <v-list-item v-for="(vault, i) in allVaults" :key="i" :value="vault" 
+    @click="selectVault(vault)"
+      :class="{ vaultselected: isSelected(vault.text) }" >
       <template #prepend>
         <v-icon :icon="vault.icon"></v-icon>
       </template>
@@ -29,9 +31,10 @@ export default {
       freq: []
     };
   },
-  methods: {
-    clickedVault(vault) {
-      this.vaultSelected = vault;
+  methods: {    
+    selectVault(vault) {
+      this.vaultSelected = vault.text;
+      this.$emit('vault-selected', vault.text);
     },
     isSelected(clickedvault) {
       return clickedvault === this.vaultSelected;
