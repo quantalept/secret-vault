@@ -28,7 +28,7 @@
             >mdi-minus-circle-outline</v-icon
           >
         </template>
-        <v-list-item-title :class="{ categoryselected: isSelected(category.title) }">
+        <v-list-item-title :class="{ categoryselected: isSelected(category.title) }" > 
           {{ category.title }}
         </v-list-item-title>
       </v-list-item>
@@ -78,7 +78,7 @@
     <deleteDialog
       v-model="delete_dialog"
       @delete-confirm="deleteItem(selectedCategory)"
-      @cancelDelete="cancelDelete"
+      @cancel-delete="cancelDelete"
     />
   </v-list>
 </template>
@@ -87,12 +87,7 @@
 import { ref } from "vue";
 import { getDBInstance } from "../../js/database";
 import { usecategoriesStore } from "../../../store/categoryStore";
-import {
-  insertCategoryToDatabase,
-  loadCategoriesFromDatabase,
-  deleteFromDatabase
-} from "../../js/category";
-//import { deleteFromDatabase } from "../../js/category";
+import { insertCategoryToDatabase, loadCategoriesFromDatabase, deleteFromDatabase } from "../../js/category";
 import Dialog from "../Dialog.vue";
 import deleteDialog from "../deleteDialog.vue";
 
@@ -180,6 +175,7 @@ export default {
         console.error("Error retrieving cs_id from the database:", error);
       }
     };
+    
     const isSelected = (clicked_category) => {
       return clicked_category === selectedCategory.value;
     };
@@ -191,7 +187,7 @@ export default {
       delete_dialog.value = false;
     };
     
-    const deleteItem = async (selectedItem) => {
+    const deleteItem = async (selectedItem) => {      
       if (selectedItem) {
         await deleteFromDatabase(selectedItem);
         delete_dialog.value = false;
@@ -213,8 +209,7 @@ export default {
       showDialog,
       cancelDelete,
       deleteItem,
-      selectedCategory,
-
+      selectedCategory,      
       showmDialog,
       mdialog,
       closemDialog,

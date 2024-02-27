@@ -67,7 +67,7 @@ export async function deleteFromDatabase(selectedItem){
     const db = await getDBInstance();
     const result = await db.select(`
     SELECT cs_id FROM Credential_Store WHERE cs_name = ? 
-    `, [selectedItem.title]);
+    `, [selectedItem]);
     if (result.length === 1) {
       const cs_id = result[0].cs_id;
       await db.execute(`

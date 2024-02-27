@@ -18,8 +18,8 @@
         :key="item.id" 
          elevation="1" 
          class="listed-catalogue"
-        :class="{ 'selected-item': isClicked(item) }" 
-        @click="clickedcs(item),selectCred(item)">
+        :class="{ 'selected-item': isClicked(item.title) }" 
+        @click="selectCred(item)">
         <v-row>
           <v-list-item-title>
             <v-col>
@@ -40,7 +40,7 @@
 </template>
    
 <script>
-import { defineComponent, ref, onMounted, watchEffect } from 'vue';
+import { defineComponent, ref, onMounted, watchEffect,computed } from 'vue';
 import { usecatalogueStore } from '../../../store/catalogueStore';
 import AddCatalogueDialog from './Catalcreationdialog.vue';
 import { getDBInstance } from '../../js/database';
@@ -65,18 +65,30 @@ export default defineComponent({
     const dialog = ref(false);
     const selecteditem = ref("");
     const toggleIcon = ref(false);
-    const delete_dialog = ref(false);
-    const currentIcon = ref("mdi-delete-circle-outline");
-    const delIcon = ref("mdi-delete-circle-outline");
-    const checkIcon = ref("mdi-close-circle-outline");
+    const delete_dialog = ref(false);    
     const dialogMessage = ref("");
     const mdialog = ref(false);
+    const icons=ref(["mdi-delete-circle-outline","mdi-close-circle-outline"]);
+    const currentIndex = ref(0);
 
-    const toggleIconVisibility = () => {
+    const currentIcon =  computed(() =>{
+      return icons.value[currentIndex.value];
+    });
+
+    const toggleIconVisibility = () =>{
       toggleIcon.value = !toggleIcon.value;
-      currentIcon.value =
-      currentIcon.value === delIcon.value ? checkIcon.value : delIcon.value;
-    };
+      currentIndex.value = (currentIndex.value + 1) % icons.value.length; 
+     };
+
+    // const currentIcon = ref("mdi-delete-circle-outline");
+    // const delIcon = ref("mdi-delete-circle-outline");
+    // const checkIcon = ref("mdi-close-circle-outline");
+    // const toggleIconVisibility = () => {
+    //   toggleIcon.value = !toggleIcon.value;
+    //   currentIcon.value =
+    //   currentIcon.value === delIcon.value ? checkIcon.value : delIcon.value;
+    // };
+
     const showmDialog = (mtitle) => {
       dialogMessage.value = mtitle;         
       openmDialog();     
@@ -97,9 +109,7 @@ export default defineComponent({
       dialog.value = false;
       catalogueStore.clearCatalogueItem();
     };
-    const clickedcs = (clicked_cs) => {
-      selecteditem.value = clicked_cs;
-    };
+    
 
     const isClicked = (clicked_cs) => {
       return clicked_cs === selecteditem.value;
@@ -142,6 +152,7 @@ export default defineComponent({
 
         if (result.length === 1) {
           const cs_id = result[0].cs_id;
+          selecteditem.value = selectedItem.title;
           emit("catelogue-selected", cs_id, selectedItem.title);
           console.log(`selected function called for item: ${cs_id},Name: ${selectedItem.title}`);
         } else {
@@ -175,8 +186,7 @@ export default defineComponent({
       dialog,
       openDialog,
       closeDialog,
-      selecteditem,
-      clickedcs,
+      selecteditem,      
       isClicked,
       selectCred,
       toggleIcon,
@@ -185,10 +195,10 @@ export default defineComponent({
       showDialog,
       deleteItem,
       cancelDelete,
-
       currentIcon,
-      delIcon,
-      checkIcon,
+      icons,
+      //delIcon,
+      //checkIcon,
       showmDialog,
       mdialog,
       closemDialog,

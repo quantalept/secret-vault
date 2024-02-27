@@ -1,5 +1,5 @@
 <template>
-   <v-dialog v-bind="delete_dialog" max-width="400">
+   <v-dialog v-bind:visible="delete_dialog" max-width="400">
       <v-card>
         <v-card-title>Confirm Deletion</v-card-title>
         <v-card-text>
