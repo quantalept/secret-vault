@@ -78,11 +78,10 @@ export async function innerjoin() {
 export async function deleteFromDatabase (selectedItem)  {
   try {
     const db = await getDBInstance();
-    console.log("---------",selectedItem);
+    
     const result = await db.select(`
     SELECT category_id, category_name FROM Category WHERE category_name = ? 
-    `, [selectedItem.title]);
-    console.log("-------------",result);
+    `, [selectedItem]);    
     if (result.length === 1) {
       const id = result[0].category_id;
       await db.execute(`
