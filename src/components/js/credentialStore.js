@@ -53,6 +53,7 @@ export async function loadcatalogues(csid) {
        `);
     }
     const fields = result.map(row => ({
+      id: row.cs_id,
       title: row.cs_name,
       desc: row.secondary_info,
     }));
