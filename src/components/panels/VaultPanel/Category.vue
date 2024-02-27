@@ -88,8 +88,8 @@ import { ref } from "vue";
 import { getDBInstance } from "../../js/database";
 import { usecategoriesStore } from "../../../store/categoryStore";
 import { insertCategoryToDatabase, loadCategoriesFromDatabase, deleteFromDatabase } from "../../js/category";
-import Dialog from "../Dialog.vue";
-import deleteDialog from "../deleteDialog.vue";
+import Dialog from "../Dialog/Dialog.vue";
+import deleteDialog from "../Dialog/deleteDialog.vue";
 
 export default {
   components: {
