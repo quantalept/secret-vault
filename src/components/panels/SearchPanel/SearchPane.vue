@@ -2,7 +2,7 @@
   <v-card style="height:100%" color="primary">
     <v-row class="mt-4 ">
       <v-col cols="10">
-        <v-text-field placeholder="Search Category..." bg-color="white" variant="solo"
+        <v-text-field v-model="searchQuery" placeholder="Search Category..." bg-color="white" variant="solo"
           class="search-field"></v-text-field>
       </v-col>
       <v-col class="mt-2">
@@ -15,8 +15,13 @@
       </v-col>
     </v-row>
     <v-list bg-color="primary">
-      <v-list-item v-for="item in catalogueStore.catalogueListed" :key="item.id" elevation="1" class="listed-catalogue"
-        :class="{ 'selected-item': isClicked(item.title) }" @click="selectCred(item)">
+      <div v-if="filteredItems.length > 0">
+      <v-list-item v-for="item in filteredItems" 
+        :key="item.id" 
+         elevation="1" 
+         class="listed-catalogue"
+        :class="{ 'selected-item': isClicked(item.title) }" 
+        @click="selectCred(item)">
         <v-row>
           <v-list-item-title>
             <v-col>
@@ -29,6 +34,8 @@
           <v-icon class="mr-5 mt-6" v-if="toggleIcon" @click="showDialog(item)">mdi-minus-circle-outline</v-icon>
         </v-row>
       </v-list-item>
+    </div>
+    <v-list-item v-else><p>No items</p></v-list-item>
     </v-list>
     <AddCatalogueDialog v-model="dialog" @add-item="addNewItem()" @cancel="closeDialog()" />
     <Dialog v-model="msgDialog" :dialogTitle="promptMsg" @msg-dialog="msgDialog = false" />
@@ -67,6 +74,23 @@ export default defineComponent({
     const msgDialog = ref(false);
     const icons = ref(["mdi-delete-circle-outline", "mdi-close-circle-outline"]);
     const currentIndex = ref(0);
+    const searchQuery = ref('');
+
+
+    const filteredItems = computed(() =>{
+      const catasItems = catalogueStore.catalogueListed;
+      if(!searchQuery.value.trim()) {
+        return catasItems;
+      } else {
+        return catasItems.filter( item => {
+          if (typeof item.title === 'string') {
+            return item.title.toLowerCase().includes(searchQuery.value.toLocaleLowerCase());
+          } else {
+            return false;
+          }  
+        })
+      }
+    })
 
     const currentIcon = computed(() => {
       return icons.value[currentIndex.value];
@@ -168,6 +192,8 @@ export default defineComponent({
       alertDialog,
       msgDialog,
       promptMsg,
+      searchQuery,
+      filteredItems,
     };
   },
 });
