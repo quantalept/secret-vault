@@ -6,10 +6,10 @@
           class="search-field"></v-text-field>
       </v-col>
       <v-col class="mt-2">
-        <v-btn @click="dialog = true" variant="text" icon size="large" density="compact">
+        <v-btn @click="dialog = true" variant="text" icon size="large" density="compact" title="Add">
           <v-icon size="large" color="grey">mdi-plus-circle-outline</v-icon>
         </v-btn>
-        <v-btn variant="text" icon class="ml-2" size="large" density="compact">
+        <v-btn variant="text" icon class="ml-2" size="large" density="compact" title="Delete">
           <v-icon size="large" color="grey" @click="toggleIconVisibility">{{ currentIcon }}</v-icon>
         </v-btn>
       </v-col>
@@ -65,7 +65,7 @@ export default defineComponent({
     const delete_Popup = ref(false);
     const promptMsg = ref("");
     const msgDialog = ref(false);
-    const icons = ref(["mdi-delete-circle-outline", "mdi-close-circle-outline"]);
+    const icons = ref(["mdi-pencil-circle-outline", "mdi-check-circle-outline"]);
     const currentIndex = ref(0);
 
     const currentIcon = computed(() => {

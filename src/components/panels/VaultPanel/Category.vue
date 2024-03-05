@@ -5,6 +5,7 @@
         <v-col class="category-class"> Categories </v-col>
         <v-col class="icon-align">
           <v-icon size="x-large" @click="toggleIconVisibility"
+          title="Delete"
             >mdi-pencil-circle-outline</v-icon
           >
         </v-col>
@@ -34,8 +35,11 @@
       </v-list-item>
       <div>
         <div v-if="!isAddingNewSubCate" class="icons">
-          <v-btn icon @click="addNewSubCate" size="small">
-            <v-icon>mdi-plus</v-icon>
+          <v-btn @click="addNewSubCate" icon size="large" density="compact" >
+            <v-icon size="large">mdi-plus-circle-outline</v-icon>
+            <v-tooltip activator="parent" location="top">
+          <div class="custom-tooltip-content">Add Category</div>
+        </v-tooltip>
           </v-btn>
         </div>
         <template v-if="isAddingNewSubCate">
@@ -55,7 +59,7 @@
               density="compact"
               variant="text"
             >
-              <v-icon color="grey">mdi-close</v-icon>
+              <v-icon color="grey">mdi-close-circle-outline</v-icon>
             </v-btn>
             <v-btn
               icon
@@ -64,7 +68,7 @@
               density="compact"
               variant="text"
             >
-              <v-icon color="grey">mdi-check</v-icon>
+              <v-icon color="grey">mdi-check-circle-outline</v-icon>
             </v-btn>
           </div>
           <Dialog
@@ -248,5 +252,10 @@ export default {
 .scroll-bar {
   height: calc(60vh - 20px);
   overflow-y: scroll;
+}
+.custom-tooltip-content {
+  font-weight: bolder;
+  color: rgba(49, 13, 209, 0.986); 
+  background-color: yellow;
 }
 </style>
