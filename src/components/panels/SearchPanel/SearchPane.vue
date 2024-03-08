@@ -67,7 +67,7 @@ export default defineComponent({
     const msgDialog = ref(false);
     const icons = ref(["mdi-delete-circle-outline", "mdi-close-circle-outline"]);
     const currentIndex = ref(0);
-
+    const error = ref('');
     const currentIcon = computed(() => {
       return icons.value[currentIndex.value];
     });
@@ -115,7 +115,9 @@ export default defineComponent({
           catalogueStore.addCatalogueItem();
           closeDialog();
         } else {
-          alertDialog("Catalogue Title is already exists!");
+          //alertDialog("Catalogue Title is already exists!");
+
+          emit('err-msg');
         }
       } else {
         alertDialog("Empty data is not allowed");
@@ -168,6 +170,7 @@ export default defineComponent({
       alertDialog,
       msgDialog,
       promptMsg,
+      error,
     };
   },
 });

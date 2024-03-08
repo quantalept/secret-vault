@@ -46,6 +46,9 @@
             density="compact"
             ref="newCategory"
           ></v-text-field>
+          <!-- ******************************************************* -->
+          <div v-if="error" class="error-message">{{ error }}</div>
+          <!-- ******************************************************* -->
           <div class="icons">
             <v-btn
               icon
@@ -104,7 +107,9 @@ export default {
     const delete_dialog = ref(false);
     const dialogMessage = ref("");
     const mdialog = ref(false);
-
+    // ------------------------
+    const error = ref('');
+    // ------------------------
     const showmDialog = (mtitle) => {
       dialogMessage.value = mtitle;
       openmDialog();
@@ -126,6 +131,7 @@ export default {
     const closefield = () => {
       isAddingNewSubCate.value = false;
       categoriesStore.clearCategory();
+      error.value='';
     };
     const addNewCategory = async () => {
       if (categoriesStore.newItem.title.trim() !== "") {
@@ -140,13 +146,18 @@ export default {
         if (result_ui.length === 0) {
           await insertCategoryToDatabase();
           isAddingNewSubCate.value = false;
+          error.value='';
           loadCategoriesFromDatabase();
           categoriesStore.clearCategory();
         } else {
-          showmDialog("Category is already exists!");
+          //showmDialog("Category is already exists!");
+          //------------------------------------------
+          error.value='Category already exists';
+          //-------------------------------------------
         }
       } else {
-        showmDialog("Empty data is not allowed");
+        //showmDialog("Empty data is not allowed");
+        error.value='Category value should not be empty';
       }
     };
     const CountByTitle = (title) => {
@@ -214,6 +225,7 @@ export default {
       mdialog,
       closemDialog,
       dialogMessage,
+      error,
     };
   },
 };
@@ -244,9 +256,15 @@ export default {
 
 .icons {
   text-align: center;
+  margin-top: 10%;
 }
 .scroll-bar {
   height: calc(60vh - 20px);
   overflow-y: scroll;
 }
+.error-message {
+    color: red;
+    margin-top: 5px;
+    margin-left: 10px;
+  }
 </style>
