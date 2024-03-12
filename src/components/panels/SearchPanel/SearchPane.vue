@@ -30,7 +30,7 @@
         </v-row>
       </v-list-item>
     </v-list>
-    <AddCatalogueDialog v-model="dialog" @add-item="addNewItem()" @cancel="closeDialog()" />
+    <AddCatalogueDialog v-model="dialog" @add-item="addNewItem()" @cancel="closeDialog()" :is-error="error"/> <!--:is-error="error"-->
     <Dialog v-model="msgDialog" :dialogTitle="promptMsg" @msg-dialog="msgDialog = false" />
     <deleteDialog v-model="delete_Popup" @delete-confirm="deleteItem(selecteditem)" @cancel-delete="delete_Popup = false" />
   </v-card>
@@ -68,6 +68,7 @@ export default defineComponent({
     const icons = ref(["mdi-delete-circle-outline", "mdi-close-circle-outline"]);
     const currentIndex = ref(0);
     const error = ref('');
+    //const iserror=ref(false);
     const currentIcon = computed(() => {
       return icons.value[currentIndex.value];
     });
@@ -85,6 +86,7 @@ export default defineComponent({
     const closeDialog = () => {
       dialog.value = false;
       catalogueStore.clearCatalogueItem();
+      error.value='';
     };
 
     const isClicked = (clicked_cs) => {
@@ -94,7 +96,7 @@ export default defineComponent({
     const showDialog = (selectedItem) => {
       selecteditem.value = selectedItem;
       delete_Popup.value = true;
-    };
+    };  
 
     const deleteItem = async (selectedItem) => {
       if (selectedItem) {
@@ -110,22 +112,27 @@ export default defineComponent({
          SELECT * FROM Credential_Store 
          WHERE cs_name = ?
          `, [catalogueStore.newItem.title]);
+        error.value='';
         if (result_ui.length === 0) {
+          
           await insertCatalogueToDatabase(selecteditem, selectCred, props.selectedCateId);
           catalogueStore.addCatalogueItem();
           closeDialog();
         } else {
           //alertDialog("Catalogue Title is already exists!");
-
-          emit('err-msg');
+          //iserror.value=true;
+          error.value="Catalogue title is already exists";
+          
         }
       } else {
-        alertDialog("Empty data is not allowed");
+        //alertDialog("Empty data is not allowed");
+        error.value="Empty data is not allowed";
       }
 
     };
     ////Passing csid ..///
     const selectCred = async (selectedItem) => {
+      error.value='';
       try {
         const db = await getDBInstance();
         const result = await db.select(`
@@ -171,6 +178,7 @@ export default defineComponent({
       msgDialog,
       promptMsg,
       error,
+      iserror,
     };
   },
 });

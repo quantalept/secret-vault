@@ -2,9 +2,9 @@
   <v-dialog v-bind:visible="dialog" max-width="500">
     <v-card>
       <v-card-text>
-        <v-text-field v-model="catalogueStore.newItem.title" label="Title" @err-msg="error_Msg"></v-text-field>
+        <v-text-field v-model="catalogueStore.newItem.title" label="Title" ></v-text-field>
         <!-- ******************************************************* -->
-        <div v-if="error" class="error-message">{{ error }}</div>
+        <div v-if="iserror" class="error-message">{{ error }}</div>
         <!-- ******************************************************* -->
         <v-text-field v-model="catalogueStore.newItem.desc" label="Description"></v-text-field>
       </v-card-text>
@@ -24,26 +24,31 @@ import { usecatalogueStore } from '../../../store/catalogueStore';
 
 export default defineComponent({
   props: {
-      dialog: Boolean,      
+      dialog: Boolean,
+      error:Boolean,     
     },
   setup(props, { emit }) {
     const catalogueStore = usecatalogueStore();
-
-    const error = ref('');
+    const iserror=ref(false);
+    
 
     const  cancel =() =>{
-      emit('cancel');        
+       emit('cancel');           
       };
-    const  addNewItem =() =>{
-      emit('add-item');        
+
+    const  addNewItem =() =>{      
+      emit('add-item'); 
+      
+      if(props.error){
+      iserror.value=!iserror.value;
+      }
+
+       
       };
 
     const isButtonDisabled =  computed(() =>
       catalogueStore.newItem.title.trim().length === 0);
     
-    const error_Msg = (msg) =>{
-      error.value="Exists";
-    };
 
 
     return {
@@ -52,7 +57,7 @@ export default defineComponent({
       cancel,
       isButtonDisabled,      
       error,
-      error_Msg,
+      
     };
   },
   
