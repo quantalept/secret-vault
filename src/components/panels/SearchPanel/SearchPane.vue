@@ -30,8 +30,7 @@
         </v-row>
       </v-list-item>
     </v-list>
-    <AddCatalogueDialog v-model="dialog" @add-item="addNewItem()" @cancel="closeDialog()" :error="isError" :errorMessage="errorMessage" /> <!--:is-error="error"-->
-    <Dialog v-model="msgDialog" :dialogTitle="promptMsg" @msg-dialog="msgDialog = false" />
+    <AddCatalogueDialog v-model="dialog" @add-item="addNewItem()" @cancel="closeDialog()" :error="isError" :errorMessage="errorMessage" />    
     <deleteDialog v-model="delete_Popup" @delete-confirm="deleteItem(selecteditem)" @cancel-delete="delete_Popup = false" />
   </v-card>
 </template>
@@ -42,7 +41,6 @@ import { usecatalogueStore } from '../../../store/catalogueStore';
 import AddCatalogueDialog from './Catalcreationdialog.vue';
 import { getDBInstance } from '../../js/database';
 import { insertCatalogueToDatabase, loadcatalogues, deleteFromDatabase } from '../../js/credentialStore'
-import Dialog from '../Dialog/Dialog.vue';
 import deleteDialog from '../Dialog/deleteDialog.vue';
 
 export default defineComponent({
@@ -52,8 +50,7 @@ export default defineComponent({
   },
 
   components: {
-    AddCatalogueDialog,
-    Dialog,
+    AddCatalogueDialog,    
     deleteDialog,
 
   },
@@ -62,9 +59,7 @@ export default defineComponent({
     const dialog = ref(false);
     const selecteditem = ref("");
     const toggleIcon = ref(false);
-    const delete_Popup = ref(false);
-    const promptMsg = ref("");
-    const msgDialog = ref(false);
+    const delete_Popup = ref(false);    
     const icons = ref(["mdi-delete-circle-outline", "mdi-close-circle-outline"]);
     const currentIndex = ref(0);
     const isError = ref(false);
@@ -77,13 +72,7 @@ export default defineComponent({
     const toggleIconVisibility = () => {
       toggleIcon.value = !toggleIcon.value;
       currentIndex.value = (currentIndex.value + 1) % icons.value.length;
-    };
-
-    // const alertDialog = (alertmsg) => {
-    //   msgDialog.value = true;
-    //   promptMsg.value = alertmsg;
-    //   msgDialog.value = true;
-    // };
+    };   
 
     const alertDialog = (message) => {
       isError.value = true;
@@ -126,15 +115,12 @@ export default defineComponent({
           catalogueStore.addCatalogueItem();
           closeDialog();
         } else {
-          alertDialog("Catalogue Title is already exists!");
-      
-        
+          alertDialog("Catalogue Title is already exists!");        
           
         }
       
 
-    };
-    ////Passing csid ..///
+    };    
     const selectCred = async (selectedItem) => {
    
       try {
@@ -178,11 +164,10 @@ export default defineComponent({
       deleteItem,
       currentIcon,
       icons,
-      alertDialog,
-      msgDialog,
-      promptMsg,
-      isError,errorMessage
-      //iserror,
+      alertDialog,      
+      isError,
+      errorMessage
+      
     };
   },
 });
