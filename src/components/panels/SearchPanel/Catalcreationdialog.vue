@@ -4,7 +4,7 @@
       <v-card-text>
         <v-text-field v-model="catalogueStore.newItem.title" label="Title" ></v-text-field>
         <!-- ******************************************************* -->
-        <div v-if="iserror" class="error-message">{{ error }}</div>
+        <div v-if="error" class="error-message">{{ errorMessage }}</div>
         <!-- ******************************************************* -->
         <v-text-field v-model="catalogueStore.newItem.desc" label="Description"></v-text-field>
       </v-card-text>
@@ -24,12 +24,12 @@ import { usecatalogueStore } from '../../../store/catalogueStore';
 
 export default defineComponent({
   props: {
-      dialog: Boolean,
-      error:Boolean,     
+      dialog: Boolean, 
+      error: Boolean,
+      errorMessage: String,   
     },
   setup(props, { emit }) {
     const catalogueStore = usecatalogueStore();
-    const iserror=ref(false);
     
 
     const  cancel =() =>{
@@ -56,7 +56,7 @@ export default defineComponent({
       addNewItem,
       cancel,
       isButtonDisabled,      
-      error,
+      //error,
       
     };
   },

@@ -30,7 +30,7 @@
         </v-row>
       </v-list-item>
     </v-list>
-    <AddCatalogueDialog v-model="dialog" @add-item="addNewItem()" @cancel="closeDialog()" :is-error="error"/> <!--:is-error="error"-->
+    <AddCatalogueDialog v-model="dialog" @add-item="addNewItem()" @cancel="closeDialog()" :error="isError" :errorMessage="errorMessage" /> <!--:is-error="error"-->
     <Dialog v-model="msgDialog" :dialogTitle="promptMsg" @msg-dialog="msgDialog = false" />
     <deleteDialog v-model="delete_Popup" @delete-confirm="deleteItem(selecteditem)" @cancel-delete="delete_Popup = false" />
   </v-card>
@@ -67,8 +67,9 @@ export default defineComponent({
     const msgDialog = ref(false);
     const icons = ref(["mdi-delete-circle-outline", "mdi-close-circle-outline"]);
     const currentIndex = ref(0);
-    const error = ref('');
-    //const iserror=ref(false);
+    const isError = ref(false);
+    const errorMessage = ref("");
+  
     const currentIcon = computed(() => {
       return icons.value[currentIndex.value];
     });
@@ -78,15 +79,22 @@ export default defineComponent({
       currentIndex.value = (currentIndex.value + 1) % icons.value.length;
     };
 
-    const alertDialog = (alertmsg) => {
-      promptMsg.value = alertmsg;
-      msgDialog.value = true;
-    };
+    // const alertDialog = (alertmsg) => {
+    //   msgDialog.value = true;
+    //   promptMsg.value = alertmsg;
+    //   msgDialog.value = true;
+    // };
+
+    const alertDialog = (message) => {
+      isError.value = true;
+      errorMessage.value = message;
+    }
 
     const closeDialog = () => {
       dialog.value = false;
+      isError.value = false;
       catalogueStore.clearCatalogueItem();
-      error.value='';
+      
     };
 
     const isClicked = (clicked_cs) => {
@@ -106,33 +114,29 @@ export default defineComponent({
     }
 
     const addNewItem = async () => {
-      if (catalogueStore.newItem.title.trim() !== "") {
         const db = await getDBInstance();
         const result_ui = await db.select(`
          SELECT * FROM Credential_Store 
          WHERE cs_name = ?
          `, [catalogueStore.newItem.title]);
-        error.value='';
+     
         if (result_ui.length === 0) {
           
           await insertCatalogueToDatabase(selecteditem, selectCred, props.selectedCateId);
           catalogueStore.addCatalogueItem();
           closeDialog();
         } else {
-          //alertDialog("Catalogue Title is already exists!");
-          //iserror.value=true;
-          error.value="Catalogue title is already exists";
+          alertDialog("Catalogue Title is already exists!");
+      
+        
           
         }
-      } else {
-        //alertDialog("Empty data is not allowed");
-        error.value="Empty data is not allowed";
-      }
+      
 
     };
     ////Passing csid ..///
     const selectCred = async (selectedItem) => {
-      error.value='';
+   
       try {
         const db = await getDBInstance();
         const result = await db.select(`
@@ -177,8 +181,8 @@ export default defineComponent({
       alertDialog,
       msgDialog,
       promptMsg,
-      error,
-      iserror,
+      isError,errorMessage
+      //iserror,
     };
   },
 });
