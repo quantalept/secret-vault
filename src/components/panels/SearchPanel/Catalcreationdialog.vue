@@ -2,10 +2,8 @@
   <v-dialog v-bind:visible="dialog" max-width="500">
     <v-card>
       <v-card-text>
-        <v-text-field v-model="catalogueStore.newItem.title" label="Title" ></v-text-field>
-        <!-- ******************************************************* -->
-        <div v-if="error" class="error-message">{{ errorMessage }}</div>
-        <!-- ******************************************************* -->
+        <v-text-field v-model="catalogueStore.newItem.title" label="Title" ></v-text-field>        
+        <div v-if="error" class="error-message">{{ errorMessage }}</div>       
         <v-text-field v-model="catalogueStore.newItem.desc" label="Description"></v-text-field>
       </v-card-text>
       <v-card-actions>
@@ -38,11 +36,6 @@ export default defineComponent({
 
     const  addNewItem =() =>{      
       emit('add-item'); 
-      
-      if(props.error){
-      iserror.value=!iserror.value;
-      }
-
        
       };
 
@@ -56,7 +49,7 @@ export default defineComponent({
       addNewItem,
       cancel,
       isButtonDisabled,      
-      //error,
+      
       
     };
   },
