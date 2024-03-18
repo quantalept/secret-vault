@@ -16,18 +16,18 @@
             <v-icon>mdi-content-copy</v-icon>
             <div style="margin-right: 5px;"></div>
             <v-icon @click="show = !show">{{ field.valueType === 'password' ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
+            <div style="margin-right: 7px"></div>
+            <v-btn icon="mdi-minus" size="small" v-if="isEditing" density="compact" @click="credRemove()"></v-btn>
           </template>
-
         </v-text-field>
       </v-col>
-
     </v-row>
   </div>
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue';
-import { useCredentialStore } from '../../../store/credential';
+import { ref } from 'vue';
+import { deleteFromDatabase } from '../../js/credential';
 
 export default {
   props: {
@@ -35,7 +35,6 @@ export default {
     isEditing: Boolean,
   },
   setup(props) {
-    const credentialStore = useCredentialStore();
     const show = ref(false);
     const isFieldEditable = ref(false);
 
@@ -46,13 +45,17 @@ export default {
       }
     };
 
+    const credRemove = async () => {
+      deleteFromDatabase(props.field.id);
+
+    }
+
+
     return {
-      // field: computed(() => {
-      //   return credentialStore.credData.fields.find(f => f.label === props.field.label);
-      // }),
       show,
       isFieldEditable,
       toggleEdit,
+      credRemove,
     };
   },
 };

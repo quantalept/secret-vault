@@ -13,7 +13,7 @@
           <v-btn class="mt-5 " icon @click="toggleEdit()">
             <v-icon>{{ isEditing ? 'mdi-eye' : 'mdi-pencil' }}</v-icon>
           </v-btn>
-          <v-btn class="mt-5 md-5 ml-2" icon="mdi-plus" @click="addTextField()"></v-btn>
+          <v-btn class="mt-5 md-5 ml-2" icon="mdi-plus" @click="addTextField(), additionClicked = true"></v-btn>
           <v-btn class="mt-5 md-5 ml-2" icon="mdi-heart"></v-btn>
         </v-row>
         <v-divider />
@@ -34,7 +34,7 @@
 import { useCredentialStore } from '../../../store/credential';
 import SecretRow from './SecretRow.vue';
 import { watchEffect, ref } from 'vue';
-import { saveCredentialToDatabase } from '../../js/credential';
+import { insertNewfield, saveCredentialToDatabase } from '../../js/credential';
 import { loadCredentialData } from '../../js/credential';
 
 export default {
@@ -43,26 +43,33 @@ export default {
     selectedCatalogTitle: String,
   },
   components: {
-    SecretRow,
+    SecretRow
   },
-
 
   setup(props) {
     const credentialStore = useCredentialStore();
     const isEditing = ref(false);
-    
+    const additionClicked = ref(false);
+
+
+
     watchEffect(() => {
       credentialStore.credData.title = props.selectedCatalogTitle;
       loadCredentialData(props.selectedCsId);
     });
 
+
     const addTextField = async () => {
       credentialStore.addField()
       isEditing.value = true;
-  
+
     }
     const save = async () => {
-      await saveCredentialToDatabase(props.selectedCsId)
+      if (additionClicked.value) {
+        await insertNewfield(props.selectedCsId)
+      } else {
+        await saveCredentialToDatabase(props.selectedCsId);
+      }
     }
 
     const toggleEdit = () => {
@@ -75,7 +82,8 @@ export default {
       toggleEdit,
       isEditing,
       save,
-      addTextField
+      addTextField,
+      additionClicked
 
 
     };

@@ -1,7 +1,11 @@
 import { getDBInstance } from './database';
 import { usecatalogueStore } from '../../store/catalogueStore';
 import { innerjoin } from './category';
-import { loadCredentialData } from './credential'
+import { loadCredentialData } from './credential';
+import { useCredentialStore } from '../../store/credential';
+
+
+
 export async function insertCatalogueToDatabase(selecteditem, selectCred, cate_id) {
   try {
     const db = await getDBInstance();
@@ -66,6 +70,8 @@ export async function loadcatalogues(csid) {
 export async function deleteFromDatabase(selectedItem){
   try {
     const db = await getDBInstance();
+    const title = "";
+    const credentialStore = useCredentialStore();
     const result = await db.select(`
     SELECT cs_id FROM Credential_Store WHERE cs_name = ? 
     `, [selectedItem]);
@@ -77,6 +83,7 @@ export async function deleteFromDatabase(selectedItem){
         DELETE FROM Credential_Store WHERE cs_id = ?;
       `, [cs_id,cs_id,cs_id]);
       console.log('Item deleted successfully!');
+      credentialStore.credData.title = title;
       await loadcatalogues();
       await loadCredentialData();
     } else {

@@ -19,6 +19,7 @@ export async function saveCredentialToDatabase(csid) {
             WHERE credential_id = ?
           `, [field.value,field.label,field.id]);
       }
+      await insertNewfield(csid)
       console.log('Updated the database entry successfully!');
     } else {
       for (const field of credentialStore.credData.fields) {
@@ -28,12 +29,28 @@ export async function saveCredentialToDatabase(csid) {
           `, [csid, field.label, field.value, field.valueType]);
           field.id = field.lastInsertId;
       }
-      console.log('Inserted into the database successfully!');
+      console.log('Saved into the database successfully!');
     }
   } catch (error) {
     console.error('Error interacting with the database:', error);
   }
 };
+export async function insertNewfield(csid) {
+  try {
+    const db = await getDBInstance();
+    const credentialStore = useCredentialStore();
+    const newField = credentialStore.credData.newField;
+    await db.execute(`
+          INSERT INTO Credential (cs_id, credential_label, credential_value, type)
+          VALUES (?, ?, ?, ?)
+        `, [csid, newField.label, newField.value, newField.valueType]);
+       
+    console.log('Inserted into the database successfully!');
+  } catch (error) {
+    console.error('Error inserting into the database:', error);
+  }
+};
+
 export async function loadCredentialData(csid) {
   try {
     const db = await getDBInstance();
@@ -61,3 +78,16 @@ export async function loadCredentialData(csid) {
     console.error('Error loading credential data:', error);
   }
 };
+export async function deleteFromDatabase(id) {
+  try {
+    const credentialStore = useCredentialStore()
+    const db = await getDBInstance();
+    await db.execute(`
+        DELETE FROM Credential WHERE credential_id = ?;
+      `, [id]);
+    console.log('Item deleted successfully!');
+    credentialStore.removeField(id)
+  } catch (error) {
+    console.error('Error deleting from the database:', error);
+  }
+}
