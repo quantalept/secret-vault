@@ -19,16 +19,24 @@ export const useCredentialStore = defineStore('credential', {
         },
         
       ],
+      newField:  {
+        id: -3, 
+        label: '',
+        value: '',
+        valueType: 'password'
+      }
     },
   }),
   actions: {
-    addField(valueType) {
-      this.credData.fields.push({
-        label:'',
-        value: '',
-        valueType,
-      });
+    addField() {
+      this.credData.fields.push(this.credData.newField);
+      return this.credData.newField;
     },
+    removeField(id) {
+      const index = this.credData.fields.findIndex(item => item.id === id);
+        if (index !== -1) {
+          this.credData.fields.splice(index, 1);
+        }
+    }
   },
-  
 });
