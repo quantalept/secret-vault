@@ -10,7 +10,7 @@
         </v-col>
       </v-row>
     </v-list-subheader>
-    <div class="scroll-bar">
+    <div >
       <v-list-item
         class="pl-14"
         v-for="(category, j) in categoriesStore.categories"
@@ -258,10 +258,7 @@ export default {
   text-align: center;
   margin-top: 10%;
 }
-.scroll-bar {
-  height: calc(60vh - 20px);
-  overflow-y: scroll;
-}
+
 .error-message {
     color: red;
     margin-top: 5px;
