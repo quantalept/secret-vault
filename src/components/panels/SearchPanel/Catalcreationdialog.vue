@@ -1,8 +1,9 @@
 <template>
-  <v-dialog v-bind:visible="dialog" max-width="500">
+  <v-dialog v-bind:visible="dialog" max-width="500" persistent>
     <v-card>
       <v-card-text>
-        <v-text-field v-model="catalogueStore.newItem.title" label="Title" :rules="validateExistence" ></v-text-field>              
+        <v-text-field v-model="catalogueStore.newItem.title" label="Title" :rules="validateExistence" ></v-text-field>  
+        <div style="margin-top:15px;"></div>         
         <v-text-field v-model="catalogueStore.newItem.desc" label="Description"></v-text-field>
       </v-card-text>
       <v-card-actions>

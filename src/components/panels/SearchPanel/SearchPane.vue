@@ -30,7 +30,7 @@
         </v-row>
       </v-list-item>
     </v-list>
-    <AddCatalogueDialog v-model="dialog" @add-item="addNewItem()" @cancel="closeDialog()" :validateExistence="validateExistence" />    
+    <AddCatalogueDialog v-model="dialog" @add-item="addNewItem()" @cancel="closeDialog()" :validateExistence="validateExistence"  />    
     <deleteDialog v-model="delete_Popup" @delete-confirm="deleteItem(selecteditem)" @cancel-delete="delete_Popup = false" />
   </v-card>
 </template>
