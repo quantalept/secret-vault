@@ -2,8 +2,7 @@
   <v-dialog v-bind:visible="dialog" max-width="500">
     <v-card>
       <v-card-text>
-        <v-text-field v-model="catalogueStore.newItem.title" label="Title" ></v-text-field>        
-        <div v-if="error" class="error-message">{{ errorMessage }}</div>       
+        <v-text-field v-model="catalogueStore.newItem.title" label="Title" :rules="validateExistence" ></v-text-field>              
         <v-text-field v-model="catalogueStore.newItem.desc" label="Description"></v-text-field>
       </v-card-text>
       <v-card-actions>
@@ -22,9 +21,8 @@ import { usecatalogueStore } from '../../../store/catalogueStore';
 
 export default defineComponent({
   props: {
-      dialog: Boolean, 
-      error: Boolean,
-      errorMessage: String,   
+      dialog: Boolean,       
+      validateExistence:Array,
     },
   setup(props, { emit }) {
     const catalogueStore = usecatalogueStore();
@@ -49,7 +47,6 @@ export default defineComponent({
       addNewItem,
       cancel,
       isButtonDisabled,      
-      
       
     };
   },

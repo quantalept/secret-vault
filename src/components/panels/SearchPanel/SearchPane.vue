@@ -30,7 +30,7 @@
         </v-row>
       </v-list-item>
     </v-list>
-    <AddCatalogueDialog v-model="dialog" @add-item="addNewItem()" @cancel="closeDialog()" :error="isError" :errorMessage="errorMessage" />    
+    <AddCatalogueDialog v-model="dialog" @add-item="addNewItem()" @cancel="closeDialog()" :validateExistence="validateExistence" />    
     <deleteDialog v-model="delete_Popup" @delete-confirm="deleteItem(selecteditem)" @cancel-delete="delete_Popup = false" />
   </v-card>
 </template>
@@ -62,9 +62,7 @@ export default defineComponent({
     const delete_Popup = ref(false);    
     const icons = ref(["mdi-delete-circle-outline", "mdi-close-circle-outline"]);
     const currentIndex = ref(0);
-    const isError = ref(false);
-    const errorMessage = ref("");
-  
+      
     const currentIcon = computed(() => {
       return icons.value[currentIndex.value];
     });
@@ -73,17 +71,11 @@ export default defineComponent({
       toggleIcon.value = !toggleIcon.value;
       currentIndex.value = (currentIndex.value + 1) % icons.value.length;
     };   
-
-    const alertDialog = (message) => {
-      isError.value = true;
-      errorMessage.value = message;
-    }
+    
 
     const closeDialog = () => {
-      dialog.value = false;
-      isError.value = false;
-      catalogueStore.clearCatalogueItem();
-      
+      dialog.value = false;      
+      catalogueStore.clearCatalogueItem();      
     };
 
     const isClicked = (clicked_cs) => {
@@ -100,27 +92,23 @@ export default defineComponent({
         await deleteFromDatabase(selectedItem);
         delete_Popup.value = false;
       }
-    }
+    }    
 
-    const addNewItem = async () => {
-        const db = await getDBInstance();
-        const result_ui = await db.select(`
-         SELECT * FROM Credential_Store 
-         WHERE cs_name = ?
-         `, [catalogueStore.newItem.title]);
-     
-        if (result_ui.length === 0) {
-          
-          await insertCatalogueToDatabase(selecteditem, selectCred, props.selectedCateId);
-          catalogueStore.addCatalogueItem();
-          closeDialog();
-        } else {
-          alertDialog("Catalogue Title is already exists!");        
-          
-        }
-      
-
-    };    
+    const validateExistence = computed((value) => [      
+      (value) =>
+      !catalogueStore.catalogueListed.some(
+          (item) => item.title === value) ||
+        "Catalogue Already Exists!",
+    ]); 
+    const addNewItem = async (value) => {      
+      if (catalogueStore.newItem.title.trim() && !catalogueStore.catalogueListed.some(item => item.title === catalogueStore.newItem.title.trim()))
+      {
+        await insertCatalogueToDatabase(selecteditem, selectCred, props.selectedCateId);
+        catalogueStore.addCatalogueItem();
+        closeDialog();
+      }
+    };
+    
     const selectCred = async (selectedItem) => {
    
       try {
@@ -163,10 +151,8 @@ export default defineComponent({
       showDialog,
       deleteItem,
       currentIcon,
-      icons,
-      alertDialog,      
-      isError,
-      errorMessage
+      icons,           
+      validateExistence,
       
     };
   },

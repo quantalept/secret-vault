@@ -45,10 +45,8 @@
             label="Enter new submenu name"
             density="compact"
             ref="newCategory"
-          ></v-text-field>
-          <!-- ******************************************************* -->
-          <div v-if="error" class="error-message">{{ error }}</div>
-          <!-- ******************************************************* -->
+            :rules="validateExistence"
+          ></v-text-field>          
           <div class="icons">
             <v-btn
               icon
@@ -66,6 +64,7 @@
               @click="addNewCategory"
               density="compact"
               variant="text"
+              :disabled="isButtonDisabled"
             >
               <v-icon color="grey">mdi-check</v-icon>
             </v-btn>
@@ -87,7 +86,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { getDBInstance } from "../../js/database";
 import { usecategoriesStore } from "../../../store/categoryStore";
 import { insertCategoryToDatabase, loadCategoriesFromDatabase, deleteFromDatabase } from "../../js/category";
@@ -106,10 +105,7 @@ export default {
     const toggleIcon = ref(false);
     const delete_dialog = ref(false);
     const dialogMessage = ref("");
-    const mdialog = ref(false);
-    // ------------------------
-    const error = ref('');
-    // ------------------------
+    const mdialog = ref(false);    
     const showmDialog = (mtitle) => {
       dialogMessage.value = mtitle;
       openmDialog();
@@ -130,36 +126,20 @@ export default {
     };
     const closefield = () => {
       isAddingNewSubCate.value = false;
-      categoriesStore.clearCategory();
-      error.value='';
+      categoriesStore.clearCategory();      
     };
-    const addNewCategory = async () => {
-      if (categoriesStore.newItem.title.trim() !== "") {
-        const db = await getDBInstance();
-        const result_ui = await db.select(
-          `
-      SELECT * FROM Category 
-      WHERE category_name = ? 
-      `,
-          [categoriesStore.newItem.title]
-        );
-        if (result_ui.length === 0) {
-          await insertCategoryToDatabase();
-          isAddingNewSubCate.value = false;
-          error.value='';
-          loadCategoriesFromDatabase();
-          categoriesStore.clearCategory();
-        } else {
-          //showmDialog("Category is already exists!");
-          //------------------------------------------
-          error.value='Category already exists';
-          //-------------------------------------------
-        }
-      } else {
-        //showmDialog("Empty data is not allowed");
-        error.value='Category value should not be empty';
+
+    const validateExistence = computed((value) => [      
+      (value) => !categoriesStore.categories.some((category) => category.title === value) || "Category Already Exists!", ]);
+      const addNewCategory = async (value) => {      
+      if (categoriesStore.newItem.title.trim() && !categoriesStore.categories.some(category => category.title === categoriesStore.newItem.title.trim()))
+       {
+        await insertCategoryToDatabase();
+        loadCategoriesFromDatabase();
+        closefield();
       }
     };
+   
     const CountByTitle = (title) => {
       const cateItem = categoriesStore.cate_count.find(
         (item) => item.category_name === title
@@ -204,8 +184,10 @@ export default {
         delete_dialog.value = false;
       }
     };
-
-    return {
+    const isButtonDisabled = computed (()=>
+     categoriesStore.newItem.title.trim().length === 0);
+    
+     return {
       categoriesStore,
       isSelected,
       addNewCategory,
@@ -225,7 +207,8 @@ export default {
       mdialog,
       closemDialog,
       dialogMessage,
-      error,
+      validateExistence,
+      isButtonDisabled,
     };
   },
 };
