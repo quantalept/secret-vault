@@ -2,6 +2,4 @@ node_modules
 dist
 dist-ssr
 *.local
-.sample.vue
-src/components/panels/checkError.vue
-src/components/panels/textField.vue
+

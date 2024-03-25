@@ -98,7 +98,7 @@ export default defineComponent({
       (value) =>
       !catalogueStore.catalogueListed.some(
           (item) => item.title === value) ||
-        "Catalogue Already Exists!",
+        "Already Exists!",
     ]); 
     const addNewItem = async (value) => {      
       if (catalogueStore.newItem.title.trim() && !catalogueStore.catalogueListed.some(item => item.title === catalogueStore.newItem.title.trim()))
